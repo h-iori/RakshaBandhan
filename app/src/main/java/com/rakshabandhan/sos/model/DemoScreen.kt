@@ -5,5 +5,9 @@ enum class DemoScreen {
     HOME,
     ACTIVE_SOS,
     RESPONDER_ALERT,
-    HISTORY
+    HISTORY,
+    PROFILE_SETTINGS,
+    PRIVACY_POLICY,
+    TERMS_CONDITIONS,
+    ABOUT
 }
