@@ -1,5 +1,6 @@
 package com.rakshabandhan.sos.ui.screens
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -8,6 +9,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -44,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -52,6 +55,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import com.rakshabandhan.sos.ui.components.DemoFrame
 import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
@@ -64,7 +69,7 @@ import com.rakshabandhan.sos.ui.theme.Slate700
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
-
+import com.rakshabandhan.sos.R
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
 
@@ -217,18 +222,13 @@ fun AboutScreen(onBack: () -> Unit) {
                             )
                         )
                     ) {
-                        // ↓ Replace this with:
-                        // Image(
-                        //     painter = painterResource(id = R.drawable.dev_photo),
-                        //     contentDescription = "Developer photo",
-                        //     contentScale = ContentScale.Crop,
-                        //     modifier = Modifier.fillMaxSize().clip(CircleShape)
-                        // )
-                        Icon(
-                            Icons.Filled.Person,
-                            contentDescription = "Developer photo placeholder",
-                            tint = Coral500,
-                            modifier = Modifier.size(50.dp)
+                        Image(
+                            painter = painterResource(id = R.drawable.dev_profile), 
+                            contentDescription = "Profile photo of Harsh Swatantra Upadhyay",
+                            contentScale = ContentScale.Crop, // Ensures the image fills the circle without stretching
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape)
                         )
                     }
                 }
@@ -240,7 +240,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 modifier = Modifier.alpha(nameAlpha)
             ) {
                 Text(
-                    "Your Name Here",
+                    "Harsh Swatantra Upadhyay",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Slate100,
                     fontWeight = FontWeight.Bold,
@@ -248,14 +248,14 @@ fun AboutScreen(onBack: () -> Unit) {
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "Android Developer",
+                    "AI Engineer • Tech Enthusiast",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Coral500,
                     textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    "📍 Bengaluru, India",
+                    "📍 Mumbai, India",
                     style = MaterialTheme.typography.bodySmall,
                     color = Slate200,
                     textAlign = TextAlign.Center
@@ -293,55 +293,16 @@ fun AboutScreen(onBack: () -> Unit) {
                         )
                     }
                     Text(
-                        "Hi! I'm a passionate Android developer dedicated to building apps that make " +
-                                "a real difference. RakshaBandhan SOS was born from a deep desire to make " +
-                                "safety accessible to everyone, especially women navigating the city at night.\n\n" +
-                                "I believe technology should be a shield, not just a tool. Every line of code " +
-                                "in this app is written with care, purpose, and the hope that it will one day " +
-                                "help someone in their most vulnerable moment.",
+                        "I am an AI Engineer and Tech Enthusiast based in Mumbai, India. " +
+                            "RakshaBandhan SOS was independently designed and developed end to end by me, " +
+                            "with a focus on clean architecture, reliability, and a polished user experience. " +
+                            "I build practical, production-minded software with a strong emphasis on purpose, precision, and quality.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Slate200
                     )
                 }
             }
 
-            // ── Tech stack ───────────────────────────────────────────────────
-            Surface(
-                shape = MaterialTheme.shapes.large,
-                color = Navy800,
-                border = BorderStroke(1.dp, Slate700.copy(alpha = 0.5f)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(techAlpha)
-            ) {
-                Column(
-                    modifier = Modifier.padding(18.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            Icons.Filled.Code,
-                            contentDescription = null,
-                            tint = Sky500,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Text(
-                            "Tech Stack",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Slate100,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    TechRow("Language", "Kotlin", Mint500)
-                    TechRow("UI Framework", "Jetpack Compose", Sky500)
-                    TechRow("Architecture", "MVVM + Clean", Amber500)
-                    TechRow("Navigation", "Compose Navigation", Coral500)
-                    TechRow("Design", "Material 3", Mint500)
-                }
-            }
 
             // ── App info ─────────────────────────────────────────────────────
             Surface(
@@ -373,16 +334,15 @@ fun AboutScreen(onBack: () -> Unit) {
                             fontWeight = FontWeight.SemiBold
                         )
                     }
-                    AboutInfoRow("App Name", "RakshaBandhan SOS")
-                    AboutInfoRow("Version", "1.1 (Build 2)")
-                    AboutInfoRow("Contact", "developer@example.com")
-                    AboutInfoRow("GitHub", "github.com/yourname/rakshabandhan")
-                    AboutInfoRow("License", "MIT Open Source")
+                    AboutInfoRow("App Name", "RakshaBandhan")
+                    AboutInfoRow("Version", "1.1")
+                    AboutInfoRow("Contact", "harshupadhyay9702@gmail.com")
+                    AboutInfoRow("GitHub", "https://www.github.com/h-iori")
                 }
             }
 
             Text(
-                "Made with ❤️ for safety",
+                "Built independently with 💪 purpose",
                 style = MaterialTheme.typography.bodySmall,
                 color = Slate200.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,

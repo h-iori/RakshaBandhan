@@ -114,6 +114,7 @@ import com.rakshabandhan.sos.ui.theme.Sky500
 import com.rakshabandhan.sos.ui.theme.Slate100
 import com.rakshabandhan.sos.ui.theme.Slate200
 import com.rakshabandhan.sos.ui.theme.Slate700
+import com.rakshabandhan.sos.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -234,38 +235,49 @@ fun DemoApp() {
                         contentWindowInsets = WindowInsets.safeDrawing,
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Column {
-                                        Text(
-                                            "RakshaBandhan SOS",
-                                            color = Slate100,
-                                            style = MaterialTheme.typography.titleMedium
+                            // ── Fixed Navbar Logo Implementation ───────
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    // Apply Navy background color here so it blends with status bars.
+                                    .background(Navy900.copy(alpha = 0.97f))
+                                    .statusBarsPadding()
+                            ) {
+                                TopAppBar(
+                                    title = {
+                                        // 1. The Image is now inside the title area, meaning it will naturally
+                                        // stop where the hamburger menu begins.
+                                        androidx.compose.foundation.Image(
+                                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.rakshabandhan_navbar),
+                                            contentDescription = "RakshaBandhan SOS Logo",
+                                            modifier = Modifier
+                                                .fillMaxWidth() // Fill the available space up to the hamburger icon
+                                                .height(44.dp) // Shrunk slightly from 64dp for a more professional, breathable look
+                                                .padding(end = 16.dp), // Gives a little breathing room before the menu icon
+                                            // 2. 'Fit' ensures the image scales down proportionally without stretching
+                                            contentScale = androidx.compose.ui.layout.ContentScale.Fit,
+                                            // 3. Aligns the image vertically to the center and horizontally to the left
+                                            alignment = Alignment.CenterStart 
                                         )
-                                        Text(
-                                            "Demo shell — static data",
-                                            color = Slate200,
-                                            style = MaterialTheme.typography.labelSmall
-                                        )
-                                    }
-                                },
-                                // ── Hamburger on the RIGHT ──────────────
-                                actions = {
-                                    IconButton(
-                                        onClick = { scope.launch { drawerState.open() } }
-                                    ) {
-                                        Icon(
-                                            Icons.Filled.Menu,
-                                            contentDescription = "Open menu",
-                                            tint = Slate100
-                                        )
-                                    }
-                                },
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = Navy900.copy(alpha = 0.97f),
-                                    titleContentColor = Slate100
+                                    },
+                                    // ── Hamburger on the RIGHT ──────────────
+                                    actions = {
+                                        IconButton(
+                                            onClick = { scope.launch { drawerState.open() } }
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Menu,
+                                                contentDescription = "Open menu",
+                                                tint = Slate100
+                                            )
+                                        }
+                                    },
+                                    colors = TopAppBarDefaults.topAppBarColors(
+                                        containerColor = Color.Transparent, 
+                                        titleContentColor = Slate100
+                                    )
                                 )
-                            )
+                            }
                         },
                         bottomBar = {
                             if (selected in bottomNavScreens) {
