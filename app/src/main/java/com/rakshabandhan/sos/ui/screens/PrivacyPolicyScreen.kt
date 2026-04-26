@@ -32,6 +32,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rakshabandhan.sos.ui.components.DemoFrame
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
 import com.rakshabandhan.sos.ui.theme.Navy800
@@ -124,7 +126,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
         title = "Privacy Policy",
         subtitle = "Last updated: January 2024",
         trailing = {
-            IconButton(onClick = onBack) {
+            IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
                 Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
             }
         }

@@ -19,6 +19,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.hapticClickable
+import com.rakshabandhan.sos.ui.haptics.withHaptic
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -237,7 +240,7 @@ fun PrimarySosButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             }
         }
         Button(
-            onClick = onClick,
+            onClick = withHaptic(AppHapticEvent.HEAVY_CLICK, onClick),
             modifier = Modifier
                 .fillMaxWidth(0.88f)
                 .height(64.dp)
@@ -289,7 +292,7 @@ fun MapPlaceholderCard(
     )
 
     ElevatedCard(
-        modifier = modifier.fillMaxWidth().aspectRatio(1.35f).clickable { expanded = true },
+        modifier = modifier.fillMaxWidth().aspectRatio(1.35f).hapticClickable(hapticEvent = AppHapticEvent.TAP) { expanded = true },
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF0F1E36)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
@@ -442,7 +445,7 @@ private fun FullscreenMapOverlay(
                 Text(title, style = MaterialTheme.typography.titleLarge, color = Slate100)
                 Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Slate200)
             }
-            FilledTonalIconButton(onClick = onClose, colors = IconButtonDefaults.filledTonalIconButtonColors(
+            FilledTonalIconButton(onClick = withHaptic(AppHapticEvent.REJECT, onClose), colors = IconButtonDefaults.filledTonalIconButtonColors(
                 containerColor = Color.White.copy(alpha = 0.12f), contentColor = Slate100
             )) { Icon(Icons.Filled.Close, null) }
         }
@@ -514,7 +517,7 @@ private fun FullscreenMapOverlay(
 @Composable
 fun SecondaryActionButton(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     OutlinedButton(
-        onClick = onClick, modifier = modifier.height(52.dp),
+        onClick = withHaptic(AppHapticEvent.TAP, onClick), modifier = modifier.height(52.dp),
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(1.dp, Slate700),
         colors = ButtonDefaults.outlinedButtonColors(contentColor = Slate100)
@@ -663,7 +666,7 @@ fun DemoScreenTabs(selected: DemoScreen, onSelect: (DemoScreen) -> Unit, modifie
             Surface(
                 shape = RoundedCornerShape(999.dp), color = bg,
                 border = BorderStroke(1.dp, if (isSelected) Coral500 else Slate700),
-                modifier = Modifier.weight(1f).clip(RoundedCornerShape(999.dp)).clickable { onSelect(screen) }
+                modifier = Modifier.weight(1f).clip(RoundedCornerShape(999.dp)).hapticClickable(hapticEvent = AppHapticEvent.SELECTION) { onSelect(screen) }
             ) {
                 Text(
                     screen.name.take(4),

@@ -17,6 +17,9 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
+import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -270,7 +273,7 @@ fun DemoApp() {
                                     // ── Hamburger on the RIGHT ──────────────
                                     actions = {
                                         IconButton(
-                                            onClick = { scope.launch { drawerState.open() } }
+                                            onClick = withHaptic(AppHapticEvent.TAP) { scope.launch { drawerState.open() } }
                                         ) {
                                             Icon(
                                                 Icons.Filled.Menu,
@@ -292,7 +295,7 @@ fun DemoApp() {
                                     navItems.forEach { item ->
                                         NavigationBarItem(
                                             selected = selected == item.screen,
-                                            onClick = {
+                                            onClick = withHaptic(AppHapticEvent.SELECTION) {
                                                 previousScreen = selected
                                                 selected = item.screen
                                             },
@@ -606,7 +609,7 @@ fun ModernDrawerContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
-                        .clickable { onLogout() }
+                        .hapticClickable(hapticEvent = AppHapticEvent.TAP) { onLogout() }
                         .padding(horizontal = 12.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -666,7 +669,7 @@ private fun ModernDrawerItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp)) // Sharper corners for enterprise feel
             .background(bgColor)
-            .clickable(onClick = onClick)
+            .hapticClickable(hapticEvent = AppHapticEvent.TAP, onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),

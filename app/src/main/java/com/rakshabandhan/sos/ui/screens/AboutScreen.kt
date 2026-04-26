@@ -58,6 +58,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import com.rakshabandhan.sos.ui.components.DemoFrame
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
@@ -138,7 +140,7 @@ fun AboutScreen(onBack: () -> Unit) {
         title = "About",
         subtitle = "Meet the developer.",
         trailing = {
-            IconButton(onClick = onBack) {
+            IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
                 Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
             }
         }

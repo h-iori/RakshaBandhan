@@ -10,6 +10,9 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
+import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -181,19 +184,19 @@ private fun HistoryListMode(
             HistoryFilterChip(
                 label = "Helped someone",
                 selected = activeFilter == HistoryRecordFilter.HELPED_SOMEONE,
-                onClick = { onFilterSelected(HistoryRecordFilter.HELPED_SOMEONE) }
+                onClick = withHaptic(AppHapticEvent.SELECTION) { onFilterSelected(HistoryRecordFilter.HELPED_SOMEONE) }
             )
             HistoryFilterChip(
                 label = "Asked for help",
                 selected = activeFilter == HistoryRecordFilter.ASKED_FOR_HELP,
-                onClick = { onFilterSelected(HistoryRecordFilter.ASKED_FOR_HELP) }
+                onClick = withHaptic(AppHapticEvent.SELECTION) { onFilterSelected(HistoryRecordFilter.ASKED_FOR_HELP) }
             )
         }
 
         filteredIncidents.forEach { incident ->
             HistoryListCard(
                 incident = incident,
-                onClick = { onSelect(incident) }
+                onClick = withHaptic(AppHapticEvent.TAP) { onSelect(incident) }
             )
         }
     }
@@ -208,7 +211,7 @@ private fun HistoryFilterChip(
     onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier.hapticClickable(hapticEvent = AppHapticEvent.SELECTION, onClick = onClick),
         shape = RoundedCornerShape(999.dp),
         color = if (selected) Coral500.copy(alpha = 0.16f) else CardSurface,
         border = BorderStroke(
@@ -236,7 +239,7 @@ private fun HistoryListCard(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .hapticClickable(hapticEvent = AppHapticEvent.TAP, onClick = onClick),
         shape = MaterialTheme.shapes.large,
         color = CardSurface,
         // Single consistent border color — no severity-driven accent
@@ -319,7 +322,7 @@ private fun HistoryDetailMode(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     FilledTonalIconButton(
-                        onClick = onBack,
+                        onClick = withHaptic(AppHapticEvent.TAP, onBack),
                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                             containerColor = Sky500.copy(alpha = 0.14f),
                             contentColor = Slate100

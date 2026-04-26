@@ -54,6 +54,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rakshabandhan.sos.ui.components.DemoFrame
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
+import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import com.rakshabandhan.sos.ui.components.SecondaryActionButton
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
@@ -236,14 +239,14 @@ private fun CredentialStep(
 
                     if (!otpSent) {
                         Button(
-                            onClick = onSendOtp,
+                            onClick = withHaptic(AppHapticEvent.TAP, onSendOtp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Send OTP")
                         }
                         SecondaryActionButton(
                             label = "Continue with Google",
-                            onClick = onGoogleLogin,
+                            onClick = withHaptic(AppHapticEvent.TAP, onGoogleLogin),
                             modifier = Modifier.fillMaxWidth()
                         )
                     } else {
@@ -267,11 +270,11 @@ private fun CredentialStep(
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             SecondaryActionButton(
                                 label = "Resend",
-                                onClick = { /* reset otp state handled above */ },
+                                onClick = withHaptic(AppHapticEvent.TAP) { /* reset otp state handled above */ },
                                 modifier = Modifier.weight(1f)
                             )
                             Button(
-                                onClick = onVerifyOtp,
+                                onClick = withHaptic(AppHapticEvent.TAP, onVerifyOtp),
                                 modifier = Modifier.weight(1f),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Coral500,
@@ -425,7 +428,7 @@ private fun ProfileCompletionStep(
                 Spacer(Modifier.height(4.dp))
 
                 Button(
-                    onClick = onContinue,
+                    onClick = withHaptic(AppHapticEvent.TAP, onContinue),
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Coral500,
@@ -458,7 +461,7 @@ private fun GenderChip(
 ) {
     FilterChip(
         selected = isSelected,
-        onClick = onSelect,
+        onClick = withHaptic(AppHapticEvent.SELECTION, onSelect),
         label = {
             Text(
                 label,

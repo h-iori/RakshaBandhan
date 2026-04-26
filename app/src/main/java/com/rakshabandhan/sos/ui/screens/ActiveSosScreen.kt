@@ -48,6 +48,8 @@ import com.rakshabandhan.sos.ui.components.MapPlaceholderCard
 import com.rakshabandhan.sos.ui.components.ResponderCard
 import com.rakshabandhan.sos.ui.components.StatusChip
 import com.rakshabandhan.sos.ui.components.TimelineCard
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
@@ -128,7 +130,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
             Slot(4) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
                     Button(
-                        onClick = { showStopConfirmation = true },
+                        onClick = withHaptic(AppHapticEvent.TAP) { showStopConfirmation = true },
                         modifier = Modifier.weight(1f).height(52.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Slate100)
                     ) {
@@ -137,7 +139,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
                         Text("Stop SOS")
                     }
                     Button(
-                        onClick = onExtend,
+                        onClick = withHaptic(AppHapticEvent.TAP, onExtend),
                         modifier = Modifier.weight(1f).height(52.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Mint500, contentColor = Slate100)
                     ) {
@@ -171,7 +173,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
             text = { Text("Only stop the alert if you are safe. This will end live location sharing for nearby users.") },
             confirmButton = {
                 TextButton(
-                    onClick = {
+                    onClick = withHaptic(AppHapticEvent.CONFIRM) {
                         showStopConfirmation = false
                         onStop()
                     }
@@ -180,7 +182,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showStopConfirmation = false }) {
+                TextButton(onClick = withHaptic(AppHapticEvent.REJECT) { showStopConfirmation = false }) {
                     Text("Keep Active")
                 }
             }

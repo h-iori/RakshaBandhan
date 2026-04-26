@@ -8,6 +8,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
+import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -120,7 +123,7 @@ private fun AlertListMode(
         alerts.forEach { alert ->
             AlertListCard(
                 alert = alert,
-                onClick = { onSelect(alert) }
+                onClick = withHaptic(AppHapticEvent.TAP) { onSelect(alert) }
             )
         }
     }
@@ -136,7 +139,7 @@ private fun AlertListCard(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .hapticClickable(hapticEvent = AppHapticEvent.TAP, onClick = onClick),
         shape = MaterialTheme.shapes.large,
         color = CardSurface,
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.28f))
@@ -236,7 +239,7 @@ private fun AlertDetailMode(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     FilledTonalIconButton(
-                        onClick = onBack,
+                        onClick = withHaptic(AppHapticEvent.TAP, onBack),
                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                             containerColor = Coral500.copy(alpha = 0.14f),
                             contentColor = Slate100
@@ -316,7 +319,7 @@ private fun AlertDetailMode(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Button(
-                    onClick = { pendingAction = AlertResponseAction.COMING },
+                    onClick = withHaptic(AppHapticEvent.TAP) { pendingAction = AlertResponseAction.COMING },
                     modifier = Modifier
                         .weight(1f)
                         .height(52.dp),
@@ -330,7 +333,7 @@ private fun AlertDetailMode(
                     Text("I am coming", fontWeight = FontWeight.Bold)
                 }
                 Button(
-                    onClick = { pendingAction = AlertResponseAction.ARRIVED },
+                    onClick = withHaptic(AppHapticEvent.TAP) { pendingAction = AlertResponseAction.ARRIVED },
                     modifier = Modifier
                         .weight(1f)
                         .height(52.dp),
@@ -401,12 +404,12 @@ private fun AlertDetailMode(
                 )
             },
             confirmButton = {
-                TextButton(onClick = { pendingAction = null }) {
+                TextButton(onClick = withHaptic(AppHapticEvent.CONFIRM) { pendingAction = null }) {
                     Text(if (action == AlertResponseAction.COMING) "I am coming" else "Mark arrived")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { pendingAction = null }) {
+                TextButton(onClick = withHaptic(AppHapticEvent.REJECT) { pendingAction = null }) {
                     Text("Cancel")
                 }
             }

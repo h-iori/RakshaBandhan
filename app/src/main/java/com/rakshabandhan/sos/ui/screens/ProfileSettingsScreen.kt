@@ -47,6 +47,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.rakshabandhan.sos.ui.components.DemoFrame
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
+import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
 import com.rakshabandhan.sos.ui.theme.Navy800
@@ -79,7 +82,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
             title = "Profile Settings",
             subtitle = "Update your personal information.",
             trailing = {
-                IconButton(onClick = onBack) {
+                IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
                 }
             }
@@ -197,7 +200,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
 
                     // Save button
                     Button(
-                        onClick = {
+                        onClick = withHaptic(AppHapticEvent.TAP) {
                             nameError = name.isBlank()
                             if (!nameError) {
                                 saved = true
@@ -255,7 +258,7 @@ private fun ProfileGenderChip(
 ) {
     FilterChip(
         selected = isSelected,
-        onClick = onSelect,
+        onClick = withHaptic(AppHapticEvent.SELECTION, onSelect),
         label = { Text(label, style = MaterialTheme.typography.labelMedium, maxLines = 1) },
         modifier = modifier,
         colors = FilterChipDefaults.filterChipColors(

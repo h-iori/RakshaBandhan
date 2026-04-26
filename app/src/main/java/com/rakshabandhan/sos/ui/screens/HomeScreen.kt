@@ -28,6 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rakshabandhan.sos.model.demoIncidents
+import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
+import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.components.DemoFrame
 import com.rakshabandhan.sos.ui.components.HeroMetric
 import com.rakshabandhan.sos.ui.components.LinearMetricRow
@@ -109,11 +111,11 @@ fun HomeScreen(onGoToSos: () -> Unit) {
             onDismissRequest = { showConfirm = false },
             confirmButton = {
                 Button(
-                    onClick = { showConfirm = false; onGoToSos() },
+                    onClick = withHaptic(AppHapticEvent.CONFIRM) { showConfirm = false; onGoToSos() },
                     colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Navy900)
                 ) { Text("Confirm SOS") }
             },
-            dismissButton = { TextButton(onClick = { showConfirm = false }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = withHaptic(AppHapticEvent.REJECT) { showConfirm = false }) { Text("Cancel") } },
             icon = { Icon(Icons.Filled.Bolt, null, tint = Coral500) },
             title = { Text("Confirm emergency broadcast") },
             text = {
