@@ -282,7 +282,7 @@ private fun CredentialStep(
                     }
 
                     Text(
-                        "Static demo — no real backend calls.",
+                        "By continuing, you agree to our Privacy Policy and Terms of Service.",
                         style = MaterialTheme.typography.bodySmall,
                         color = Slate200.copy(alpha = 0.6f)
                     )

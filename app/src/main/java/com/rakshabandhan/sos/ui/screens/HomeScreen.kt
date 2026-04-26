@@ -8,10 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Shield
@@ -69,40 +66,34 @@ fun HomeScreen(onGoToSos: () -> Unit) {
     }
 
     DemoFrame(
-        title = "Emergency home",
-        subtitle = "One tap starts the SOS broadcast.",
+        title = "Emergency SOS",
+        subtitle = "One tap sends your live location within 500m.",
         trailing = { Icon(Icons.Filled.Shield, null, tint = Mint500) }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
             Slot(0) {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                    HeroMetric("500m", "Broadcast radius", modifier = Modifier.weight(1f), accentColor = Coral500)
-                    HeroMetric("17", "Helpers nearby", modifier = Modifier.weight(1f), accentColor = Mint500)
-                }
+                HeroMetric("500m", "Broadcast radius", modifier = Modifier.fillMaxWidth(), accentColor = Coral500)
             }
 
             Slot(1) {
                 MapPlaceholderCard(
-                    title = "Night commute coverage",
-                    subtitle = "Tap to expand. Nearby users see this live.",
-                    showRoute = false
+                    title = "Up to 500m from your location",
+                    subtitle = "Tap to expand the 500m radius.",
+                    showRoute = false,
+                    compactFullscreenFooter = true,
+                    fullscreenStatusLabel = "Inactive"
                 )
             }
 
             Slot(2) { PrimarySosButton(onClick = { showConfirm = true }) }
 
             Slot(3) {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                    HeroMetric("15 min", "Auto stop", modifier = Modifier.weight(1f), accentColor = Sky500)
-                    HeroMetric("2-4 min", "Avg response", modifier = Modifier.weight(1f), accentColor = Mint500)
-                }
+                HeroMetric("15 min", "Auto stop", modifier = Modifier.fillMaxWidth(), accentColor = Sky500)
             }
 
             Slot(4) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LinearMetricRow("Verified helpers nearby", "17 users")
-                    LinearMetricRow("Average response time", "2-4 minutes")
                     LinearMetricRow("Recent incidents", "${demoIncidents.size} entries")
                 }
             }
@@ -127,7 +118,7 @@ fun HomeScreen(onGoToSos: () -> Unit) {
             title = { Text("Confirm emergency broadcast") },
             text = {
                 Text(
-                    "Nearby verified users within 500m will receive the alert with your live location.\n\nThis is a UI-only demo — confirmation just switches screens.",
+                    "Nearby users within 500m will receive the alert with your live location.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Slate200
                 )

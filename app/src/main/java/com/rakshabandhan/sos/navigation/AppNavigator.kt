@@ -54,6 +54,8 @@ import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Sos
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -94,6 +96,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rakshabandhan.sos.model.DemoScreen
+import com.rakshabandhan.sos.model.SosState
+import com.rakshabandhan.sos.model.demoIncomingAlerts
 import com.rakshabandhan.sos.model.demoIncidents
 import com.rakshabandhan.sos.ui.components.AppBackground
 import com.rakshabandhan.sos.ui.screens.AboutScreen
@@ -153,6 +157,9 @@ data class DemoNavItem(
 fun DemoApp() {
     var selected by rememberSaveable { mutableStateOf(DemoScreen.AUTH) }
     var previousScreen by remember { mutableStateOf(DemoScreen.AUTH) }
+    val nearbyAlertCount = remember {
+        demoIncomingAlerts.count { it.state != SosState.STOPPED }
+    }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -192,12 +199,12 @@ fun DemoApp() {
         }
     }
 
-    val navItems = remember {
+    val navItems = remember(nearbyAlertCount) {
         listOf(
             DemoNavItem(DemoScreen.AUTH, "Auth") { Icon(Icons.Filled.AccountCircle, null) },
             DemoNavItem(DemoScreen.HOME, "Home") { Icon(Icons.Filled.Home, null) },
             DemoNavItem(DemoScreen.ACTIVE_SOS, "SOS") { Icon(Icons.Filled.Sos, null) },
-            DemoNavItem(DemoScreen.RESPONDER_ALERT, "Alert") { Icon(Icons.Filled.NotificationsActive, null) },
+            DemoNavItem(DemoScreen.RESPONDER_ALERT, "Alert") { AlertNavIcon(nearbyAlertCount) },
             DemoNavItem(DemoScreen.HISTORY, "History") { Icon(Icons.Filled.History, null) }
         )
     }
@@ -401,6 +408,29 @@ fun DemoApp() {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun AlertNavIcon(count: Int) {
+    if (count > 0) {
+        BadgedBox(
+            badge = {
+                Badge(
+                    containerColor = Coral500,
+                    contentColor = Navy950
+                ) {
+                    Text(
+                        text = count.coerceAtMost(99).toString(),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+        ) {
+            Icon(Icons.Filled.NotificationsActive, null)
+        }
+    } else {
+        Icon(Icons.Filled.NotificationsActive, null)
     }
 }
 

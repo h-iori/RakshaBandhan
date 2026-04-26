@@ -19,11 +19,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CallEnd
 import androidx.compose.material.icons.filled.ExpandCircleDown
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.rakshabandhan.sos.model.ResponderState
 import com.rakshabandhan.sos.model.SosState
 import com.rakshabandhan.sos.model.demoResponders
 import com.rakshabandhan.sos.model.demoTimeline
@@ -56,12 +59,16 @@ import kotlinx.coroutines.delay
 fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
     // Live counting timer starting at 08:42
     var elapsedSeconds by remember { mutableIntStateOf(8 * 60 + 42) }
+    var showStopConfirmation by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         while (true) { delay(1000L); elapsedSeconds++ }
     }
     val minutes = elapsedSeconds / 60
     val seconds = elapsedSeconds % 60
     val timerDisplay = "%02d:%02d".format(minutes, seconds)
+    val activeResponders = remember { demoResponders.filter { it.state != ResponderState.NONE } }
+    val helpersOnTheWay = activeResponders.count { it.state == ResponderState.COMING }
+    val helpersArrived = activeResponders.count { it.state == ResponderState.ARRIVED }
 
     // Staggered entrance
     val visible = remember { Array(7) { mutableStateOf(false) } }
@@ -82,7 +89,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
 
     DemoFrame(
         title = "Active SOS",
-        subtitle = "Live timer. Tap map to expand.",
+        subtitle = "",
         trailing = { StatusChip("ACTIVE", SosState.ACTIVE) }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -96,30 +103,32 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
 
             Slot(1) {
                 MapPlaceholderCard(
-                    title = "Live route view",
-                    subtitle = "Victim location centred. Tap to expand.",
-                    showRoute = true
+                    title = "Nearby users",
+                    subtitle = "Nearby helpers around your location. Tap to expand.",
+                    showRoute = true,
+                    compactFullscreenFooter = true,
+                    fullscreenStatusLabel = "Active",
+                    footerText = null
                 )
             }
 
             Slot(2) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                    HeroMetric("17", "En route", modifier = Modifier.weight(1f), accentColor = Mint500)
-                    HeroMetric("4", "Arrived", modifier = Modifier.weight(1f), accentColor = Mint500)
+                    HeroMetric(helpersOnTheWay.toString(), "On the way", modifier = Modifier.weight(1f), accentColor = Mint500)
+                    HeroMetric(helpersArrived.toString(), "Arrived", modifier = Modifier.weight(1f), accentColor = Mint500)
                 }
             }
 
             Slot(3) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LinearMetricRow("Notification mode", "High priority")
-                    LinearMetricRow("Broadcast status", "Active 500m radius")
+                    LinearMetricRow("Broadcast status", "Active within 500m")
                 }
             }
 
             Slot(4) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
                     Button(
-                        onClick = onStop,
+                        onClick = { showStopConfirmation = true },
                         modifier = Modifier.weight(1f).height(52.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Slate100)
                     ) {
@@ -134,15 +143,15 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
                     ) {
                         Icon(Icons.Filled.ExpandCircleDown, null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
-                        Text("Extend")
+                        Text("Extend Broadcast")
                     }
                 }
             }
 
             Slot(5) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Live responders", style = MaterialTheme.typography.titleMedium, color = Slate100, fontWeight = FontWeight.SemiBold)
-                    demoResponders.forEachIndexed { i, r -> ResponderCard(r, animIndex = i) }
+                    Text("Nearby helpers", style = MaterialTheme.typography.titleMedium, color = Slate100, fontWeight = FontWeight.SemiBold)
+                    activeResponders.forEachIndexed { i, r -> ResponderCard(r, animIndex = i) }
                 }
             }
 
@@ -153,5 +162,28 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
                 }
             }
         }
+    }
+
+    if (showStopConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showStopConfirmation = false },
+            title = { Text("Stop SOS?") },
+            text = { Text("Only stop the alert if you are safe. This will end live location sharing for nearby users.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showStopConfirmation = false
+                        onStop()
+                    }
+                ) {
+                    Text("Yes, Stop")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showStopConfirmation = false }) {
+                    Text("Keep Active")
+                }
+            }
+        )
     }
 }

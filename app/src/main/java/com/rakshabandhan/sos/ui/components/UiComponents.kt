@@ -123,8 +123,10 @@ fun DemoFrame(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(title, style = MaterialTheme.typography.titleLarge, color = Slate100)
-                    Spacer(Modifier.height(4.dp))
-                    Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = Slate200)
+                    if (subtitle.isNotBlank()) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = Slate200)
+                    }
                 }
                 trailing?.invoke()
             }
@@ -162,7 +164,7 @@ fun HeroMetric(
 @Composable
 fun StatusChip(text: String, state: SosState, modifier: Modifier = Modifier) {
     val color = when (state) {
-        SosState.ACTIVE -> Coral500
+        SosState.ACTIVE -> Mint500
         SosState.ENDING -> Amber500
         SosState.STOPPED -> Mint500
     }
@@ -266,7 +268,12 @@ fun MapPlaceholderCard(
     title: String,
     subtitle: String,
     modifier: Modifier = Modifier,
-    showRoute: Boolean = false
+    showRoute: Boolean = false,
+    compactFullscreenFooter: Boolean = false,
+    fullscreenStatusLabel: String = "Recorded",
+    footerText: String? = null,
+    fullscreenStats: List<MapFooterStat>? = null,
+    fullscreenLocationLabel: String? = "MG Road, Bengaluru"
 ) {
     var expanded by remember { mutableStateOf(false) }
     val infinite = rememberInfiniteTransition(label = "map")
@@ -324,10 +331,12 @@ fun MapPlaceholderCard(
                 Text(title, style = MaterialTheme.typography.titleMedium, color = Slate100)
                 Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Slate200)
             }
-            Row(modifier = Modifier.align(Alignment.BottomStart).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.LocationOn, null, tint = Coral500, modifier = Modifier.size(15.dp))
-                Spacer(Modifier.width(5.dp))
-                Text("Live broadcast active", style = MaterialTheme.typography.labelSmall, color = Slate200)
+            if (!footerText.isNullOrBlank()) {
+                Row(modifier = Modifier.align(Alignment.BottomStart).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Filled.LocationOn, null, tint = Coral500, modifier = Modifier.size(15.dp))
+                    Spacer(Modifier.width(5.dp))
+                    Text(footerText, style = MaterialTheme.typography.labelSmall, color = Slate200)
+                }
             }
             Surface(
                 modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).size(30.dp),
@@ -347,13 +356,37 @@ fun MapPlaceholderCard(
             onDismissRequest = { expanded = false },
             properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnBackPress = true)
         ) {
-            FullscreenMapOverlay(title = title, subtitle = subtitle, showRoute = showRoute, onClose = { expanded = false })
+            FullscreenMapOverlay(
+                title = title,
+                subtitle = subtitle,
+                showRoute = showRoute,
+                compactFooter = compactFullscreenFooter,
+                statusLabel = fullscreenStatusLabel,
+                fullscreenStats = fullscreenStats,
+                fullscreenLocationLabel = fullscreenLocationLabel,
+                onClose = { expanded = false }
+            )
         }
     }
 }
 
+data class MapFooterStat(
+    val value: String,
+    val label: String,
+    val color: Color
+)
+
 @Composable
-private fun FullscreenMapOverlay(title: String, subtitle: String, showRoute: Boolean, onClose: () -> Unit) {
+private fun FullscreenMapOverlay(
+    title: String,
+    subtitle: String,
+    showRoute: Boolean,
+    compactFooter: Boolean,
+    statusLabel: String,
+    fullscreenStats: List<MapFooterStat>?,
+    fullscreenLocationLabel: String?,
+    onClose: () -> Unit
+) {
     val infinite = rememberInfiniteTransition(label = "fsmap")
     val pinPulse by infinite.animateFloat(
         initialValue = 0f, targetValue = 1f,
@@ -422,16 +455,35 @@ private fun FullscreenMapOverlay(title: String, subtitle: String, showRoute: Boo
             border = BorderStroke(1.dp, Slate700.copy(alpha = 0.5f))
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-                    FsMapStat("500m", "Radius", Coral500)
-                    FsMapStat("3", "Responders", Mint500)
-                    FsMapStat("2 min", "Avg ETA", Sky500)
-                    FsMapStat("4", "Arrived", Amber500)
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Filled.MyLocation, null, tint = Coral500, modifier = Modifier.size(13.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Live — MG Road, Bengaluru", style = MaterialTheme.typography.labelSmall, color = Slate200)
+                if (compactFooter) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+                        FsMapStat("500m", "Radius", Coral500)
+                        FsMapStat(
+                            statusLabel,
+                            "Record",
+                            Mint500
+                        )
+                    }
+                } else {
+                    val footerStats = (fullscreenStats ?: listOf(
+                        MapFooterStat("500m", "Radius", Coral500),
+                        MapFooterStat("3", "Responders", Mint500),
+                        MapFooterStat("4", "Arrived", Amber500)
+                    )).filterNot { stat ->
+                        stat.label.contains("eta", ignoreCase = true)
+                    }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+                        footerStats.forEach { stat ->
+                            FsMapStat(stat.value, stat.label, stat.color)
+                        }
+                    }
+                    if (!fullscreenLocationLabel.isNullOrBlank()) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Filled.MyLocation, null, tint = Coral500, modifier = Modifier.size(13.dp))
+                            Spacer(Modifier.width(6.dp))
+                            Text(fullscreenLocationLabel, style = MaterialTheme.typography.labelSmall, color = Slate200)
+                        }
+                    }
                 }
             }
         }
@@ -525,12 +577,12 @@ fun ResponderCard(responder: ResponderItem, modifier: Modifier = Modifier, animI
                 }
                 Column(modifier = Modifier.weight(1f)) {
                     Text(responder.name, style = MaterialTheme.typography.titleMedium, color = Slate100)
-                    Text("${responder.distanceMeters}m • ETA ${responder.etaMinutes} min", style = MaterialTheme.typography.bodySmall, color = Slate200)
+                    Text("${responder.distanceMeters}m away", style = MaterialTheme.typography.bodySmall, color = Slate200)
                 }
                 Surface(shape = RoundedCornerShape(999.dp), color = accent.copy(alpha = 0.12f)) {
                     Text(
                         when (responder.state) {
-                            ResponderState.COMING -> "En route"; ResponderState.ARRIVED -> "Arrived"; ResponderState.NONE -> "Idle"
+                            ResponderState.COMING -> "On the way"; ResponderState.ARRIVED -> "Arrived"; ResponderState.NONE -> "Nearby"
                         },
                         style = MaterialTheme.typography.labelSmall, color = accent,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
