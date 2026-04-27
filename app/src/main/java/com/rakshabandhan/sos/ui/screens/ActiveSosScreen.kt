@@ -1,5 +1,7 @@
 package com.rakshabandhan.sos.ui.screens
 
+
+import androidx.compose.ui.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -53,8 +55,6 @@ import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
 import kotlinx.coroutines.delay
 
 @Composable
@@ -132,7 +132,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
                     Button(
                         onClick = withHaptic(AppHapticEvent.TAP) { showStopConfirmation = true },
                         modifier = Modifier.weight(1f).height(52.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Slate100)
+                        colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Color.White)
                     ) {
                         Icon(Icons.Filled.CallEnd, null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
@@ -141,7 +141,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
                     Button(
                         onClick = withHaptic(AppHapticEvent.TAP, onExtend),
                         modifier = Modifier.weight(1f).height(52.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Mint500, contentColor = Slate100)
+                        colors = ButtonDefaults.buttonColors(containerColor = Mint500, contentColor = Color.White)
                     ) {
                         Icon(Icons.Filled.ExpandCircleDown, null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
@@ -152,14 +152,14 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
 
             Slot(5) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Nearby helpers", style = MaterialTheme.typography.titleMedium, color = Slate100, fontWeight = FontWeight.SemiBold)
+                    Text("Nearby helpers", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
                     activeResponders.forEachIndexed { i, r -> ResponderCard(r, animIndex = i) }
                 }
             }
 
             Slot(6) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Event timeline", style = MaterialTheme.typography.titleMedium, color = Slate100, fontWeight = FontWeight.SemiBold)
+                    Text("Event timeline", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
                     demoTimeline.forEachIndexed { i, e -> TimelineCard(e.time, e.label, e.detail, animIndex = i) }
                 }
             }

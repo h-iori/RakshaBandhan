@@ -52,11 +52,6 @@ import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy800
-import com.rakshabandhan.sos.ui.theme.Navy900
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
-import com.rakshabandhan.sos.ui.theme.Slate700
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -83,7 +78,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
             subtitle = "Update your personal information.",
             trailing = {
                 IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         ) {
@@ -124,7 +119,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
                         Text(
                             "Your profile avatar",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Slate200
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
@@ -143,7 +138,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
                         supportingText = if (nameError) {
                             { Text("Name cannot be empty") }
                         } else null,
-                        leadingIcon = { Icon(Icons.Filled.Person, null, tint = Slate200) },
+                        leadingIcon = { Icon(Icons.Filled.Person, null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
 
@@ -152,7 +147,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
                         Text(
                             "Gender",
                             style = MaterialTheme.typography.labelLarge,
-                            color = Slate200
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -185,8 +180,8 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
                     // Info row
                     Surface(
                         shape = MaterialTheme.shapes.medium,
-                        color = Navy800,
-                        border = BorderStroke(1.dp, Slate700.copy(alpha = 0.4f))
+                        color = MaterialTheme.colorScheme.surface,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
                     ) {
                         Column(
                             modifier = Modifier.padding(14.dp),
@@ -212,7 +207,7 @@ fun ProfileSettingsScreen(onBack: () -> Unit) {
                         modifier = Modifier.fillMaxWidth().height(52.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (saved) Mint500 else Coral500,
-                            contentColor = Navy900
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
                         if (saved) {
@@ -244,8 +239,8 @@ private fun LabelValue(label: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = Slate200)
-        Text(value, style = MaterialTheme.typography.bodySmall, color = Slate100, fontWeight = FontWeight.Medium)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -264,14 +259,14 @@ private fun ProfileGenderChip(
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = Coral500.copy(alpha = 0.18f),
             selectedLabelColor = Coral500,
-            containerColor = Navy800,
-            labelColor = Slate200
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         border = FilterChipDefaults.filterChipBorder(
             enabled = true,
             selected = isSelected,
             selectedBorderColor = Coral500.copy(alpha = 0.5f),
-            borderColor = Slate700
+            borderColor = MaterialTheme.colorScheme.outline
         )
     )
 }

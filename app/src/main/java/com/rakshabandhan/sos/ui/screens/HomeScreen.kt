@@ -38,9 +38,7 @@ import com.rakshabandhan.sos.ui.components.PrimarySosButton
 import com.rakshabandhan.sos.ui.components.SecondaryActionButton
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy900
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate200
 import kotlinx.coroutines.delay
 
 @Composable
@@ -112,7 +110,7 @@ fun HomeScreen(onGoToSos: () -> Unit) {
             confirmButton = {
                 Button(
                     onClick = withHaptic(AppHapticEvent.CONFIRM) { showConfirm = false; onGoToSos() },
-                    colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Navy900)
+                    colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = MaterialTheme.colorScheme.onPrimary)
                 ) { Text("Confirm SOS") }
             },
             dismissButton = { TextButton(onClick = withHaptic(AppHapticEvent.REJECT) { showConfirm = false }) { Text("Cancel") } },
@@ -122,7 +120,7 @@ fun HomeScreen(onGoToSos: () -> Unit) {
                 Text(
                     "Nearby users within 500m will receive the alert with your live location.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Slate200
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         )

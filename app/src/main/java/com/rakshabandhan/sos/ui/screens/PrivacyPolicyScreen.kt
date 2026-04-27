@@ -36,11 +36,7 @@ import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
 import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy800
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
-import com.rakshabandhan.sos.ui.theme.Slate700
 import kotlinx.coroutines.delay
 
 private data class PolicySection(val title: String, val body: String)
@@ -127,7 +123,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
         subtitle = "Last updated: January 2024",
         trailing = {
             IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     ) {
@@ -151,13 +147,13 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
                         Text(
                             "Your Privacy Matters",
                             style = MaterialTheme.typography.titleSmall,
-                            color = Slate100,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             "We are committed to protecting your personal data and your right to privacy.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Slate200
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -177,7 +173,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
 private fun PolicyBlock(section: PolicySection, accent: androidx.compose.ui.graphics.Color) {
     Surface(
         shape = MaterialTheme.shapes.medium,
-        color = Navy800,
+        color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, accent.copy(alpha = 0.2f))
     ) {
         Column(
@@ -193,7 +189,7 @@ private fun PolicyBlock(section: PolicySection, accent: androidx.compose.ui.grap
             Text(
                 section.body,
                 style = MaterialTheme.typography.bodySmall,
-                color = Slate200,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = MaterialTheme.typography.bodySmall.lineHeight
             )
         }

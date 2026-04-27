@@ -36,10 +36,7 @@ import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy800
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
 import kotlinx.coroutines.delay
 
 private data class TermsSection(val title: String, val body: String)
@@ -143,7 +140,7 @@ fun TermsConditionsScreen(onBack: () -> Unit) {
         subtitle = "Last updated: January 2024",
         trailing = {
             IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     ) {
@@ -167,13 +164,13 @@ fun TermsConditionsScreen(onBack: () -> Unit) {
                         Text(
                             "Please Read Carefully",
                             style = MaterialTheme.typography.titleSmall,
-                            color = Slate100,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             "These terms govern your use of RakshaBandhan SOS and constitute a binding agreement.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Slate200
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -193,7 +190,7 @@ fun TermsConditionsScreen(onBack: () -> Unit) {
 private fun TermsBlock(section: TermsSection, accent: androidx.compose.ui.graphics.Color) {
     Surface(
         shape = MaterialTheme.shapes.medium,
-        color = Navy800,
+        color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, accent.copy(alpha = 0.2f))
     ) {
         Column(
@@ -209,7 +206,7 @@ private fun TermsBlock(section: TermsSection, accent: androidx.compose.ui.graphi
             Text(
                 section.body,
                 style = MaterialTheme.typography.bodySmall,
-                color = Slate200,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = MaterialTheme.typography.bodySmall.lineHeight
             )
         }

@@ -86,22 +86,23 @@ import com.rakshabandhan.sos.model.ResponderItem
 import com.rakshabandhan.sos.model.ResponderState
 import com.rakshabandhan.sos.model.SosState
 import com.rakshabandhan.sos.ui.theme.Amber500
-import com.rakshabandhan.sos.ui.theme.CardSurface
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy900
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
-import com.rakshabandhan.sos.ui.theme.Slate700
+
+import com.rakshabandhan.sos.ui.theme.LocalThemeMode
 
 // ── AppBackground ─────────────────────────────────────────────────────────────
 
 @Composable
 fun AppBackground(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    val bg = MaterialTheme.colorScheme.background
+    val surfaceVar = MaterialTheme.colorScheme.surfaceVariant
+    val gradientColors = listOf(bg, surfaceVar, bg)
+    
     Box(
         modifier = modifier.background(
-            Brush.linearGradient(listOf(Color(0xFF07111F), Color(0xFF0B1730), Color(0xFF0D1F3A)))
+            Brush.linearGradient(gradientColors)
         )
     ) { content() }
 }
@@ -118,17 +119,17 @@ fun DemoFrame(
 ) {
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(containerColor = CardSurface),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 14.dp),
         shape = MaterialTheme.shapes.large
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(title, style = MaterialTheme.typography.titleLarge, color = Slate100)
+                    Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
                     if (subtitle.isNotBlank()) {
                         Spacer(Modifier.height(4.dp))
-                        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = Slate200)
+                        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
                 trailing?.invoke()
@@ -155,9 +156,9 @@ fun HeroMetric(
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.22f))
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
-            Text(value, style = MaterialTheme.typography.headlineLarge, color = Slate100, fontWeight = FontWeight.Bold)
+            Text(value, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(2.dp))
-            Text(label, style = MaterialTheme.typography.bodyMedium, color = Slate200)
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -192,7 +193,7 @@ fun StatusChip(text: String, state: SosState, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(10.dp).alpha(if (state == SosState.ACTIVE) dotAlpha else 1f)
             )
             Spacer(Modifier.width(8.dp))
-            Text(text, style = MaterialTheme.typography.labelLarge, color = Slate100)
+            Text(text, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -251,7 +252,7 @@ fun PrimarySosButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
                     spotColor = Coral500.copy(alpha = 0.5f)
                 ),
             shape = MaterialTheme.shapes.large,
-            colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Color(0xFF07111F))
+            colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = MaterialTheme.colorScheme.onPrimary)
         ) {
             Text(
                 "SOS",
@@ -291,22 +292,31 @@ fun MapPlaceholderCard(
         label = "dash"
     )
 
+    val surface = MaterialTheme.colorScheme.surface
+    val surfaceVar = MaterialTheme.colorScheme.surfaceVariant
+    val onSurface = MaterialTheme.colorScheme.onSurface
+    val outline = MaterialTheme.colorScheme.outline
+
     ElevatedCard(
         modifier = modifier.fillMaxWidth().aspectRatio(1.35f).hapticClickable(hapticEvent = AppHapticEvent.TAP) { expanded = true },
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF0F1E36)),
+        colors = CardDefaults.elevatedCardColors(containerColor = surface),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxSize().background(
-                Brush.radialGradient(listOf(Color(0xFF1A3A6A), Color(0xFF0D1C34)), radius = 900f)
+                Brush.radialGradient(
+                    listOf(surfaceVar, surface),
+                    radius = 900f
+                )
             ))
+            val gridColor = onSurface.copy(alpha = 0.08f)
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val step = size.minDimension / 7f
                 for (i in 1..6) {
                     val v = step * i
-                    drawLine(Color.White.copy(alpha = 0.055f), Offset(v, 0f), Offset(v, size.height), 1f)
-                    drawLine(Color.White.copy(alpha = 0.055f), Offset(0f, v), Offset(size.width, v), 1f)
+                    drawLine(gridColor, Offset(v, 0f), Offset(v, size.height), 1f)
+                    drawLine(gridColor, Offset(0f, v), Offset(size.width, v), 1f)
                 }
                 if (showRoute) {
                     val path = Path().apply {
@@ -328,27 +338,27 @@ fun MapPlaceholderCard(
                 val pin = Offset(size.width * 0.68f, size.height * 0.38f)
                 drawCircle(Coral500.copy(alpha = (1f - pinPulse) * 0.45f), (step * 0.3f + pinPulse * step * 1.1f).coerceAtLeast(1f), pin, style = Stroke(3f))
                 drawCircle(Sky500.copy(alpha = 0.95f), step * 0.27f, pin)
-                drawCircle(Color.White.copy(alpha = 0.9f), step * 0.11f, pin)
+                drawCircle(surface, step * 0.11f, pin)
             }
             Column(modifier = Modifier.align(Alignment.TopStart).padding(14.dp)) {
-                Text(title, style = MaterialTheme.typography.titleMedium, color = Slate100)
-                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Slate200)
+                Text(title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             if (!footerText.isNullOrBlank()) {
                 Row(modifier = Modifier.align(Alignment.BottomStart).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Filled.LocationOn, null, tint = Coral500, modifier = Modifier.size(15.dp))
                     Spacer(Modifier.width(5.dp))
-                    Text(footerText, style = MaterialTheme.typography.labelSmall, color = Slate200)
+                    Text(footerText, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
             Surface(
                 modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).size(30.dp),
                 shape = CircleShape,
-                color = Color.White.copy(alpha = 0.08f),
-                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f))
+                color = surface.copy(alpha = 0.4f),
+                border = BorderStroke(1.dp, outline.copy(alpha = 0.2f))
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Filled.ZoomIn, null, tint = Slate200, modifier = Modifier.size(15.dp))
+                    Icon(Icons.Filled.ZoomIn, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(15.dp))
                 }
             }
         }
@@ -400,13 +410,16 @@ private fun FullscreenMapOverlay(
         animationSpec = infiniteRepeatable(tween(1600, easing = LinearEasing), RepeatMode.Restart), label = "fsd"
     )
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF07111F))) {
+    val mapBgColor = MaterialTheme.colorScheme.background
+    val gridLineColor = MaterialTheme.colorScheme.onSurface
+    val surface = MaterialTheme.colorScheme.surface
+    Box(modifier = Modifier.fillMaxSize().background(mapBgColor)) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val step = size.minDimension / 11f
-            var x = 0f; while (x < size.width) { drawLine(Color.White.copy(alpha = 0.07f), Offset(x, 0f), Offset(x, size.height), 1f); x += step }
-            var y = 0f; while (y < size.height) { drawLine(Color.White.copy(alpha = 0.07f), Offset(0f, y), Offset(size.width, y), 1f); y += step }
-            drawLine(Color.White.copy(alpha = 0.12f), Offset(0f, size.height * 0.5f), Offset(size.width, size.height * 0.5f), 2.5f)
-            drawLine(Color.White.copy(alpha = 0.12f), Offset(size.width * 0.4f, 0f), Offset(size.width * 0.4f, size.height), 2.5f)
+            var x = 0f; while (x < size.width) { drawLine(gridLineColor.copy(alpha = 0.07f), Offset(x, 0f), Offset(x, size.height), 1f); x += step }
+            var y = 0f; while (y < size.height) { drawLine(gridLineColor.copy(alpha = 0.07f), Offset(0f, y), Offset(size.width, y), 1f); y += step }
+            drawLine(gridLineColor.copy(alpha = 0.12f), Offset(0f, size.height * 0.5f), Offset(size.width, size.height * 0.5f), 2.5f)
+            drawLine(gridLineColor.copy(alpha = 0.12f), Offset(size.width * 0.4f, 0f), Offset(size.width * 0.4f, size.height), 2.5f)
             if (showRoute) {
                 val path = Path().apply {
                     moveTo(size.width * 0.18f, size.height * 0.80f)
@@ -428,12 +441,12 @@ private fun FullscreenMapOverlay(
             val pin = Offset(size.width * 0.70f, size.height * 0.38f)
             drawCircle(Coral500.copy(alpha = (1f - pinPulse) * 0.5f), (step * 0.5f + pinPulse * step * 2.2f).coerceAtLeast(1f), pin, style = Stroke(3.5f))
             drawCircle(Sky500, step * 0.38f, pin)
-            drawCircle(Color.White, step * 0.16f, pin)
+            drawCircle(surface, step * 0.16f, pin)
         }
         // Top gradient
-        Box(modifier = Modifier.fillMaxWidth().height(140.dp).background(Brush.verticalGradient(listOf(Color(0xDD07111F), Color.Transparent))))
+        Box(modifier = Modifier.fillMaxWidth().height(140.dp).background(Brush.verticalGradient(listOf(MaterialTheme.colorScheme.background.copy(alpha=0.88f), Color.Transparent))))
         // Bottom gradient
-        Box(modifier = Modifier.fillMaxWidth().height(140.dp).align(Alignment.BottomCenter).background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xDD07111F)))))
+        Box(modifier = Modifier.fillMaxWidth().height(140.dp).align(Alignment.BottomCenter).background(Brush.verticalGradient(listOf(Color.Transparent, MaterialTheme.colorScheme.background.copy(alpha=0.88f)))))
 
         // Top bar
         Row(
@@ -442,11 +455,11 @@ private fun FullscreenMapOverlay(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(title, style = MaterialTheme.typography.titleLarge, color = Slate100)
-                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Slate200)
+                Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             FilledTonalIconButton(onClick = withHaptic(AppHapticEvent.REJECT, onClose), colors = IconButtonDefaults.filledTonalIconButtonColors(
-                containerColor = Color.White.copy(alpha = 0.12f), contentColor = Slate100
+                containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurface
             )) { Icon(Icons.Filled.Close, null) }
         }
 
@@ -454,8 +467,8 @@ private fun FullscreenMapOverlay(
         Surface(
             modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).navigationBarsPadding().padding(16.dp),
             shape = MaterialTheme.shapes.large,
-            color = Color(0xCC101D35),
-            border = BorderStroke(1.dp, Slate700.copy(alpha = 0.5f))
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 if (compactFooter) {
@@ -484,7 +497,7 @@ private fun FullscreenMapOverlay(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.MyLocation, null, tint = Coral500, modifier = Modifier.size(13.dp))
                             Spacer(Modifier.width(6.dp))
-                            Text(fullscreenLocationLabel, style = MaterialTheme.typography.labelSmall, color = Slate200)
+                            Text(fullscreenLocationLabel, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -493,8 +506,8 @@ private fun FullscreenMapOverlay(
 
         // Zoom controls
         Column(modifier = Modifier.align(Alignment.CenterEnd).padding(end = 14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            MapCtrlBtn { Icon(Icons.Filled.ZoomIn, null, tint = Slate100) }
-            MapCtrlBtn { Icon(Icons.Filled.ZoomOut, null, tint = Slate100) }
+            MapCtrlBtn { Icon(Icons.Filled.ZoomIn, null, tint = MaterialTheme.colorScheme.onSurface) }
+            MapCtrlBtn { Icon(Icons.Filled.ZoomOut, null, tint = MaterialTheme.colorScheme.onSurface) }
         }
     }
 }
@@ -502,12 +515,12 @@ private fun FullscreenMapOverlay(
 @Composable private fun FsMapStat(value: String, label: String, color: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, style = MaterialTheme.typography.titleSmall, color = color, fontWeight = FontWeight.Bold)
-        Text(label, style = MaterialTheme.typography.labelSmall, color = Slate200)
+        Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
 @Composable private fun MapCtrlBtn(icon: @Composable () -> Unit) {
-    Surface(modifier = Modifier.size(36.dp), shape = RoundedCornerShape(10.dp), color = Color(0xCC101D35), border = BorderStroke(1.dp, Slate700.copy(alpha = 0.6f))) {
+    Surface(modifier = Modifier.size(36.dp), shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.surfaceVariant, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
         Box(contentAlignment = Alignment.Center) { icon() }
     }
 }
@@ -519,8 +532,8 @@ fun SecondaryActionButton(label: String, onClick: () -> Unit, modifier: Modifier
     OutlinedButton(
         onClick = withHaptic(AppHapticEvent.TAP, onClick), modifier = modifier.height(52.dp),
         shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(1.dp, Slate700),
-        colors = ButtonDefaults.outlinedButtonColors(contentColor = Slate100)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurface)
     ) { Text(label, style = MaterialTheme.typography.labelLarge) }
 }
 
@@ -531,16 +544,16 @@ fun LinearMetricRow(title: String, value: String, modifier: Modifier = Modifier)
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
-        color = Color(0xFF10203D),
-        border = BorderStroke(1.dp, Slate700.copy(alpha = 0.3f))
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(title, style = MaterialTheme.typography.bodyMedium, color = Slate200)
-            Text(value, style = MaterialTheme.typography.titleSmall, color = Slate100, fontWeight = FontWeight.SemiBold)
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -564,12 +577,12 @@ fun ResponderCard(responder: ResponderItem, modifier: Modifier = Modifier, animI
         val accent = when (responder.state) {
             ResponderState.COMING -> Sky500
             ResponderState.ARRIVED -> Mint500
-            ResponderState.NONE -> Slate200
+            ResponderState.NONE -> MaterialTheme.colorScheme.onSurfaceVariant
         }
         Surface(
             modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-            color = Color(0xFF111F38),
+            color = MaterialTheme.colorScheme.surface,
             border = BorderStroke(1.dp, accent.copy(alpha = 0.28f))
         ) {
             Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -579,8 +592,8 @@ fun ResponderCard(responder: ResponderItem, modifier: Modifier = Modifier, animI
                     }
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(responder.name, style = MaterialTheme.typography.titleMedium, color = Slate100)
-                    Text("${responder.distanceMeters}m away", style = MaterialTheme.typography.bodySmall, color = Slate200)
+                    Text(responder.name, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                    Text("${responder.distanceMeters}m away", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Surface(shape = RoundedCornerShape(999.dp), color = accent.copy(alpha = 0.12f)) {
                     Text(
@@ -615,7 +628,7 @@ fun TimelineCard(time: String, title: String, detail: String, modifier: Modifier
         Surface(
             modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-            color = Color(0xFF111F38),
+            color = MaterialTheme.colorScheme.surface,
             border = BorderStroke(1.dp, Mint500.copy(alpha = 0.15f))
         ) {
             Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.Top) {
@@ -626,8 +639,8 @@ fun TimelineCard(time: String, title: String, detail: String, modifier: Modifier
                 Column {
                     Text(time, style = MaterialTheme.typography.labelSmall, color = Amber500)
                     Spacer(Modifier.height(2.dp))
-                    Text(title, style = MaterialTheme.typography.titleSmall, color = Slate100, fontWeight = FontWeight.SemiBold)
-                    Text(detail, style = MaterialTheme.typography.bodySmall, color = Slate200)
+                    Text(title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
+                    Text(detail, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -638,7 +651,7 @@ fun TimelineCard(time: String, title: String, detail: String, modifier: Modifier
 
 @Composable
 fun DemoDivider() {
-    Surface(color = Slate700.copy(alpha = 0.4f), modifier = Modifier.fillMaxWidth().height(1.dp)) {}
+    Surface(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.fillMaxWidth().height(1.dp)) {}
 }
 
 // ── PulsingHighlight ──────────────────────────────────────────────────────────
@@ -665,13 +678,13 @@ fun DemoScreenTabs(selected: DemoScreen, onSelect: (DemoScreen) -> Unit, modifie
             val bg by animateColorAsState(if (isSelected) Coral500 else Color.Transparent, label = "tabBg")
             Surface(
                 shape = RoundedCornerShape(999.dp), color = bg,
-                border = BorderStroke(1.dp, if (isSelected) Coral500 else Slate700),
+                border = BorderStroke(1.dp, if (isSelected) Coral500 else MaterialTheme.colorScheme.outline),
                 modifier = Modifier.weight(1f).clip(RoundedCornerShape(999.dp)).hapticClickable(hapticEvent = AppHapticEvent.SELECTION) { onSelect(screen) }
             ) {
                 Text(
                     screen.name.take(4),
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (isSelected) Color(0xFF07111F) else Slate200,
+                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 8.dp),
                     maxLines = 1
                 )

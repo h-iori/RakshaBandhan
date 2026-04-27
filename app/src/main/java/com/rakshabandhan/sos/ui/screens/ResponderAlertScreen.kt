@@ -60,13 +60,9 @@ import com.rakshabandhan.sos.ui.components.MapPlaceholderCard
 import com.rakshabandhan.sos.ui.components.ResponderCard
 import com.rakshabandhan.sos.ui.components.TimelineCard
 import com.rakshabandhan.sos.ui.theme.Amber500
-import com.rakshabandhan.sos.ui.theme.CardSurface
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy900
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
 import java.util.Locale
 
 @Composable
@@ -110,13 +106,13 @@ private fun AlertListMode(
             Text(
                 text = "Nearby SOS Alerts",
                 style = MaterialTheme.typography.titleLarge,
-                color = Slate100,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Open an alert to view the location and respond quickly.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Slate200
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -141,7 +137,7 @@ private fun AlertListCard(
             .fillMaxWidth()
             .hapticClickable(hapticEvent = AppHapticEvent.TAP, onClick = onClick),
         shape = MaterialTheme.shapes.large,
-        color = CardSurface,
+        color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.28f))
     ) {
         Column(
@@ -160,13 +156,13 @@ private fun AlertListCard(
                     Text(
                         text = "Someone nearby needs your help",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Slate100,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = alert.address,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Slate200,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -222,7 +218,7 @@ private fun AlertDetailMode(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        color = CardSurface,
+        color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, alertAccent(alert.severity).copy(alpha = 0.34f))
     ) {
         Column(
@@ -242,7 +238,7 @@ private fun AlertDetailMode(
                         onClick = withHaptic(AppHapticEvent.TAP, onBack),
                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                             containerColor = Coral500.copy(alpha = 0.14f),
-                            contentColor = Slate100
+                            contentColor = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to alert list")
@@ -254,18 +250,18 @@ private fun AlertDetailMode(
                 Text(
                     text = "Someone needs your help",
                     style = MaterialTheme.typography.titleLarge,
-                    color = Slate100,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = minutesAgoLabel(alert.duration),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Slate200
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = alert.address,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Slate200
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -325,7 +321,7 @@ private fun AlertDetailMode(
                         .height(52.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Coral500,
-                        contentColor = Navy900
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Icon(Icons.AutoMirrored.Filled.DirectionsWalk, null, modifier = Modifier.size(18.dp))
@@ -339,7 +335,7 @@ private fun AlertDetailMode(
                         .height(52.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Mint500,
-                        contentColor = Navy900
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Icon(Icons.Filled.Person, null, modifier = Modifier.size(18.dp))
@@ -353,7 +349,7 @@ private fun AlertDetailMode(
                     Text(
                         text = "Live timeline",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Slate100,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     alert.timeline.forEachIndexed { index, event ->
@@ -372,7 +368,7 @@ private fun AlertDetailMode(
                     Text(
                         text = "Nearby helpers",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Slate100,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     visibleResponders.forEachIndexed { index, responder ->
@@ -439,7 +435,7 @@ private fun AlertInfoPill(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                color = Slate100,
+                color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

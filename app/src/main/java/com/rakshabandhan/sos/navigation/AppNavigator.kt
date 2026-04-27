@@ -12,6 +12,9 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -32,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -55,6 +59,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Sos
+import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material.icons.filled.Nightlight
+import com.rakshabandhan.sos.ui.theme.LocalThemeMode
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Badge
@@ -89,6 +96,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -249,8 +257,8 @@ fun DemoApp() {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    // Apply Navy background color here so it blends with status bars.
-                                    .background(Navy900.copy(alpha = 0.97f))
+                                    // Apply surface background color here so it blends with status bars.
+                                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.97f))
                                     .statusBarsPadding()
                             ) {
                                 TopAppBar(
@@ -278,20 +286,20 @@ fun DemoApp() {
                                             Icon(
                                                 Icons.Filled.Menu,
                                                 contentDescription = "Open menu",
-                                                tint = Slate100
+                                                tint = MaterialTheme.colorScheme.onSurface
                                             )
                                         }
                                     },
                                     colors = TopAppBarDefaults.topAppBarColors(
                                         containerColor = Color.Transparent, 
-                                        titleContentColor = Slate100
+                                        titleContentColor = MaterialTheme.colorScheme.onSurface
                                     )
                                 )
                             }
                         },
                         bottomBar = {
                             if (selected in bottomNavScreens) {
-                                NavigationBar(containerColor = Navy900.copy(alpha = 0.97f)) {
+                                NavigationBar(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.97f)) {
                                     navItems.forEach { item ->
                                         NavigationBarItem(
                                             selected = selected == item.screen,
@@ -309,8 +317,8 @@ fun DemoApp() {
                                             colors = NavigationBarItemDefaults.colors(
                                                 selectedIconColor = Coral500,
                                                 selectedTextColor = Coral500,
-                                                unselectedIconColor = Slate200,
-                                                unselectedTextColor = Slate200,
+                                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 indicatorColor = Coral500.copy(alpha = 0.14f)
                                             )
                                         )
@@ -463,12 +471,12 @@ fun ModernDrawerContent(
     }
     val sections = remember(drawerItems) { drawerItems.map { it.section }.distinct() }
 
-    // Enterprise Dark Theme Surface
+    // Enterprise Theme Surface
     Surface(
         modifier = Modifier
             .width(320.dp) // Slightly wider for enterprise data
             .fillMaxHeight(),
-        color = Navy950 // Solid, clean background
+        color = MaterialTheme.colorScheme.background // Solid, clean background
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -497,14 +505,14 @@ fun ModernDrawerContent(
                 Text(
                     "RakshaBandhan SOS",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Slate100,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.5.sp
                 )
             }
 
             // Divider
-            HorizontalDivider(color = Slate700.copy(alpha = 0.3f))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // ── Profile Section ───────────────────────────────────────────────
             Row(
@@ -533,13 +541,13 @@ fun ModernDrawerContent(
                     Text(
                         "Priya Sharma",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Slate100,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         "priya.sharma@example.com",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Slate200.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(4.dp))
                     Row(
@@ -561,7 +569,7 @@ fun ModernDrawerContent(
                 }
             }
 
-            HorizontalDivider(color = Slate700.copy(alpha = 0.3f))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // ── Menu Navigation ───────────────────────────────────────────────
             Column(
@@ -576,7 +584,7 @@ fun ModernDrawerContent(
                     Text(
                         text = section.uppercase(),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Slate200.copy(alpha = 0.5f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 1.2.sp,
                         modifier = Modifier.padding(
@@ -597,7 +605,9 @@ fun ModernDrawerContent(
             }
 
             // ── Bottom: Actions & Version ─────────────────────────────────────
-            HorizontalDivider(color = Slate700.copy(alpha = 0.3f))
+            ThemeToggleRow()
+            
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             Column(
                 modifier = Modifier
@@ -617,13 +627,13 @@ fun ModernDrawerContent(
                     Icon(
                         Icons.Filled.Logout,
                         contentDescription = "Log Out",
-                        tint = Slate200.copy(alpha = 0.7f),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         "Log Out",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Slate200.copy(alpha = 0.9f),
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -631,7 +641,7 @@ fun ModernDrawerContent(
                 Text(
                     "Version 1.1.0 (Build 24)",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Slate200.copy(alpha = 0.4f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 8.dp, bottom = 12.dp)
@@ -658,7 +668,7 @@ private fun ModernDrawerItem(
         label = "bgColor"
     )
     val contentColor by animateColorAsState(
-        targetValue = if (isSelected) item.accentColor else Slate200.copy(alpha = 0.7f),
+        targetValue = if (isSelected) item.accentColor else MaterialTheme.colorScheme.onSurfaceVariant,
         animationSpec = tween(150),
         label = "contentColor"
     )
@@ -686,7 +696,7 @@ private fun ModernDrawerItem(
             Text(
                 text = item.label,
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (isSelected) Slate100 else contentColor,
+                color = if (isSelected) MaterialTheme.colorScheme.onBackground else contentColor,
                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
                 modifier = Modifier.weight(1f)
             )
@@ -711,6 +721,69 @@ private fun ModernDrawerItem(
                     .clip(RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp))
                     .background(item.accentColor)
             )
+        }
+    }
+}
+
+@Composable
+private fun ThemeToggleRow() {
+    val themeMode = LocalThemeMode.current
+    val isDark = themeMode.isDarkTheme
+
+    val thumbOffset by animateDpAsState(targetValue = if (isDark) 40.dp else 4.dp, animationSpec = spring(dampingRatio = 0.65f, stiffness = 400f), label = "thumbOffset")
+    val trackColor by animateColorAsState(targetValue = if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0), label = "trackColor")
+    val thumbColor by animateColorAsState(targetValue = if (isDark) Color(0xFF334155) else Color.White, label = "thumbColor")
+    val iconColor by animateColorAsState(targetValue = if (isDark) Color(0xFFFBBF24) else Color(0xFFF59E0B), label = "iconColor")
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.Transparent)
+            .hapticClickable(hapticEvent = AppHapticEvent.SELECTION) { themeMode.toggleTheme() }
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            "Appearance",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontWeight = FontWeight.Medium
+        )
+        
+        // Premium Pill Switch
+        Box(
+            modifier = Modifier
+                .width(76.dp)
+                .height(40.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(trackColor)
+        ) {
+            Box(
+                modifier = Modifier
+                    .offset(x = thumbOffset, y = 4.dp)
+                    .size(32.dp)
+                    .shadow(elevation = if (isDark) 0.dp else 4.dp, shape = CircleShape)
+                    .clip(CircleShape)
+                    .background(thumbColor),
+                contentAlignment = Alignment.Center
+            ) {
+                androidx.compose.animation.AnimatedContent(
+                    targetState = isDark,
+                    transitionSpec = {
+                        (fadeIn(tween(300)) + scaleIn(initialScale = 0.5f)) togetherWith (fadeOut(tween(300)) + scaleOut(targetScale = 0.5f))
+                    },
+                    label = "iconTransition"
+                ) { dark ->
+                    if (dark) {
+                        Icon(Icons.Filled.Nightlight, null, tint = iconColor, modifier = Modifier.size(18.dp))
+                    } else {
+                        Icon(Icons.Filled.WbSunny, null, tint = iconColor, modifier = Modifier.size(18.dp))
+                    }
+                }
+            }
         }
     }
 }

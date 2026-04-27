@@ -50,13 +50,9 @@ import com.rakshabandhan.sos.ui.components.MapPlaceholderCard
 import com.rakshabandhan.sos.ui.components.ResponderCard
 import com.rakshabandhan.sos.ui.components.TimelineCard
 import com.rakshabandhan.sos.ui.theme.Amber500
-import com.rakshabandhan.sos.ui.theme.CardSurface
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
-import com.rakshabandhan.sos.ui.theme.Slate700
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -162,7 +158,7 @@ private fun HistoryListMode(
             Text(
                 text = "History",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Slate100,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
             // Count animates when filter changes so the user sees the state update
@@ -174,7 +170,7 @@ private fun HistoryListMode(
                 Text(
                     text = "$count records",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Slate200
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -213,16 +209,16 @@ private fun HistoryFilterChip(
     Surface(
         modifier = Modifier.hapticClickable(hapticEvent = AppHapticEvent.SELECTION, onClick = onClick),
         shape = RoundedCornerShape(999.dp),
-        color = if (selected) Coral500.copy(alpha = 0.16f) else CardSurface,
+        color = if (selected) Coral500.copy(alpha = 0.16f) else MaterialTheme.colorScheme.surface,
         border = BorderStroke(
             1.dp,
-            if (selected) Coral500.copy(alpha = 0.50f) else Slate700.copy(alpha = 0.40f)
+            if (selected) Coral500.copy(alpha = 0.50f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.40f)
         )
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium,
-            color = if (selected) Slate100 else Slate200,
+            color = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
             maxLines = 1
         )
@@ -241,7 +237,7 @@ private fun HistoryListCard(
             .fillMaxWidth()
             .hapticClickable(hapticEvent = AppHapticEvent.TAP, onClick = onClick),
         shape = MaterialTheme.shapes.large,
-        color = CardSurface,
+        color = MaterialTheme.colorScheme.surface,
         // Single consistent border color — no severity-driven accent
         border = BorderStroke(1.dp, Sky500.copy(alpha = 0.22f))
     ) {
@@ -253,14 +249,14 @@ private fun HistoryListCard(
                 Text(
                     text = historyListTitle(incident),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Slate100,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold
                 )
                 // Two lines so most addresses are fully visible without being cut off
                 Text(
                     text = incident.address,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Slate200,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -303,7 +299,7 @@ private fun HistoryDetailMode(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        color = CardSurface,
+        color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, Sky500.copy(alpha = 0.28f))
     ) {
         Column(
@@ -325,7 +321,7 @@ private fun HistoryDetailMode(
                         onClick = withHaptic(AppHapticEvent.TAP, onBack),
                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                             containerColor = Sky500.copy(alpha = 0.14f),
-                            contentColor = Slate100
+                            contentColor = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
                         Icon(
@@ -337,13 +333,13 @@ private fun HistoryDetailMode(
                         Text(
                             text = detailHeaderTitle(incident),
                             style = MaterialTheme.typography.titleMedium,
-                            color = Slate100,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             text = "Past incident record",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Slate200
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -354,14 +350,14 @@ private fun HistoryDetailMode(
                 Text(
                     text = historyListTitle(incident),
                     style = MaterialTheme.typography.titleLarge,
-                    color = Slate100,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
                 // Full address unrestricted in detail view
                 Text(
                     text = incident.address,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Slate200
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -431,7 +427,7 @@ private fun HistoryDetailMode(
                     Text(
                         text = "Incident timeline",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Slate100,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     incident.timeline.forEachIndexed { index, event ->
@@ -450,20 +446,20 @@ private fun HistoryDetailMode(
                 Text(
                     text = "Responder roster",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Slate100,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold
                 )
                 if (incident.nearbyResponders.isEmpty()) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
-                        color = CardSurface,
-                        border = BorderStroke(1.dp, Slate700.copy(alpha = 0.30f))
+                        color = MaterialTheme.colorScheme.surface,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
                     ) {
                         Text(
                             text = "No responders were logged for this incident.",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Slate200,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(16.dp)
                         )
                     }
@@ -501,7 +497,7 @@ private fun HistoryInfoPill(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                color = Slate100,
+                color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )

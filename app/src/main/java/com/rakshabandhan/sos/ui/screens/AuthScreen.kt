@@ -60,11 +60,6 @@ import com.rakshabandhan.sos.ui.haptics.hapticClickable
 import com.rakshabandhan.sos.ui.components.SecondaryActionButton
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy800
-import com.rakshabandhan.sos.ui.theme.Navy900
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
-import com.rakshabandhan.sos.ui.theme.Slate700
 import kotlinx.coroutines.delay
 
 // Auth steps for the email sign-up flow
@@ -178,7 +173,7 @@ private fun CredentialStep(
     DemoFrame(
         title = "Sign in",
         subtitle = "Email OTP keeps onboarding simple.",
-        trailing = { Icon(Icons.Filled.Security, null, tint = Slate200) }
+        trailing = { Icon(Icons.Filled.Security, null, tint = MaterialTheme.colorScheme.onSurfaceVariant) }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
 
@@ -204,13 +199,13 @@ private fun CredentialStep(
                     Text(
                         "RakshaBandhan",
                         style = MaterialTheme.typography.titleLarge,
-                        color = Slate100,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         "Your safety network",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Slate200,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -278,7 +273,7 @@ private fun CredentialStep(
                                 modifier = Modifier.weight(1f),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Coral500,
-                                    contentColor = Navy900
+                                    contentColor = MaterialTheme.colorScheme.onPrimary
                                 )
                             ) { Text("Verify OTP") }
                         }
@@ -287,7 +282,7 @@ private fun CredentialStep(
                     Text(
                         "By continuing, you agree to our Privacy Policy and Terms of Service.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Slate200.copy(alpha = 0.6f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -388,7 +383,7 @@ private fun ProfileCompletionStep(
                     Text(
                         "Gender *",
                         style = MaterialTheme.typography.labelLarge,
-                        color = if (genderError) MaterialTheme.colorScheme.error else Slate200
+                        color = if (genderError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -432,7 +427,7 @@ private fun ProfileCompletionStep(
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Coral500,
-                        contentColor = Navy900
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
@@ -445,7 +440,7 @@ private fun ProfileCompletionStep(
                 Text(
                     "* Required fields",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Slate200.copy(alpha = 0.55f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f)
                 )
             }
         }
@@ -473,14 +468,14 @@ private fun GenderChip(
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = Coral500.copy(alpha = 0.18f),
             selectedLabelColor = Coral500,
-            containerColor = Navy800,
-            labelColor = Slate200
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         border = FilterChipDefaults.filterChipBorder(
             enabled = true,
             selected = isSelected,
             selectedBorderColor = Coral500.copy(alpha = 0.5f),
-            borderColor = Slate700
+            borderColor = MaterialTheme.colorScheme.outline
         )
     )
 }

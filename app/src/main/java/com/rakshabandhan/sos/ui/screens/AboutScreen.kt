@@ -63,11 +63,7 @@ import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
-import com.rakshabandhan.sos.ui.theme.Navy800
 import com.rakshabandhan.sos.ui.theme.Sky500
-import com.rakshabandhan.sos.ui.theme.Slate100
-import com.rakshabandhan.sos.ui.theme.Slate200
-import com.rakshabandhan.sos.ui.theme.Slate700
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
@@ -141,7 +137,7 @@ fun AboutScreen(onBack: () -> Unit) {
         subtitle = "Meet the developer.",
         trailing = {
             IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Slate200)
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     ) {
@@ -209,10 +205,10 @@ fun AboutScreen(onBack: () -> Unit) {
                     }
                 }
 
-                // Developer photo circle (placeholder — swap with Image when you have a real photo)
+                // Developer photo circle
                 Surface(
                     shape = CircleShape,
-                    color = Color(0xFF1A3362),
+                    color = MaterialTheme.colorScheme.surface,
                     border = BorderStroke(3.dp, Coral500.copy(alpha = 0.6f)),
                     modifier = Modifier.size(118.dp)
                 ) {
@@ -220,7 +216,10 @@ fun AboutScreen(onBack: () -> Unit) {
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.background(
                             Brush.radialGradient(
-                                listOf(Color(0xFF1E3E70), Color(0xFF0D1C34))
+                                listOf(
+                                    MaterialTheme.colorScheme.surfaceVariant,
+                                    MaterialTheme.colorScheme.surface
+                                )
                             )
                         )
                     ) {
@@ -244,7 +243,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 Text(
                     "Harsh Swatantra Upadhyay",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Slate100,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -259,7 +258,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 Text(
                     "📍 Mumbai, India",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Slate200,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
             }
@@ -267,8 +266,8 @@ fun AboutScreen(onBack: () -> Unit) {
             // ── Bio ──────────────────────────────────────────────────────────
             Surface(
                 shape = MaterialTheme.shapes.large,
-                color = Navy800,
-                border = BorderStroke(1.dp, Slate700.copy(alpha = 0.5f)),
+                color = MaterialTheme.colorScheme.surface,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(bioAlpha)
@@ -290,7 +289,7 @@ fun AboutScreen(onBack: () -> Unit) {
                         Text(
                             "About Me",
                             style = MaterialTheme.typography.titleMedium,
-                            color = Slate100,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -300,7 +299,7 @@ fun AboutScreen(onBack: () -> Unit) {
                             "with a focus on clean architecture, reliability, and a polished user experience. " +
                             "I build practical, production-minded software with a strong emphasis on purpose, precision, and quality.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Slate200
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -309,8 +308,8 @@ fun AboutScreen(onBack: () -> Unit) {
             // ── App info ─────────────────────────────────────────────────────
             Surface(
                 shape = MaterialTheme.shapes.large,
-                color = Navy800,
-                border = BorderStroke(1.dp, Slate700.copy(alpha = 0.5f)),
+                color = MaterialTheme.colorScheme.surface,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(contactAlpha)
@@ -332,7 +331,7 @@ fun AboutScreen(onBack: () -> Unit) {
                         Text(
                             "App Info",
                             style = MaterialTheme.typography.titleMedium,
-                            color = Slate100,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -346,7 +345,7 @@ fun AboutScreen(onBack: () -> Unit) {
             Text(
                 "Built independently with 💪 purpose",
                 style = MaterialTheme.typography.bodySmall,
-                color = Slate200.copy(alpha = 0.5f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.alpha(contactAlpha)
             )
@@ -365,7 +364,7 @@ private fun TechRow(label: String, value: String, accent: Color) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = Slate200)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Surface(
             shape = MaterialTheme.shapes.extraSmall,
             color = accent.copy(alpha = 0.12f),
@@ -388,11 +387,11 @@ private fun AboutInfoRow(label: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = Slate200)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(
             value,
             style = MaterialTheme.typography.bodySmall,
-            color = Slate100,
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Medium
         )
     }

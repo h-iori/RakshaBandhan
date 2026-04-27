@@ -12,6 +12,15 @@ val Slate400 = Color(0xFF8A9BB8)
 val Slate200 = Color(0xFFD4DCE8)
 val Slate100 = Color(0xFFF2F5FA)
 
+// ── Light Premium Enterprise palette ──────────────────────────────────────────
+val LightBackground = Color(0xFFF4F7FB) // Very soft, cool-tinted off-white for depth
+val LightSurface = Color(0xFFFFFFFF)    // Pure crisp white for elevated cards
+val LightSurfaceVariant = Color(0xFFEDF2F7) // Soft subtle contrast for flat inner surfaces
+val LightTextPrimary = Color(0xFF111827) // Deep blue-gray, much softer than pure black
+val LightTextSecondary = Color(0xFF64748B) // Refined muted slate for secondary information
+val LightOutline = Color(0xFFE2E8F0) // Extremely subtle borders to avoid boxy look
+val LightOutlineVariant = Color(0xFFF1F5F9) // Barely visible dividers
+
 // ── Accent ───────────────────────────────────────────────────────────────────
 val Coral500  = Color(0xFFFF5B5F)
 val Coral600  = Color(0xFFE94A4F)
