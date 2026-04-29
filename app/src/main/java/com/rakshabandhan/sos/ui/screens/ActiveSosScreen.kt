@@ -130,7 +130,7 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
             Slot(4) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
                     Button(
-                        onClick = withHaptic(AppHapticEvent.TAP) { showStopConfirmation = true },
+                        onClick = withHaptic(AppHapticEvent.HEAVY_CLICK) { showStopConfirmation = true },
                         modifier = Modifier.weight(1f).height(52.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Coral500, contentColor = Color.White)
                     ) {

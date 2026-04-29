@@ -303,7 +303,9 @@ fun DemoApp() {
                                     navItems.forEach { item ->
                                         NavigationBarItem(
                                             selected = selected == item.screen,
-                                            onClick = withHaptic(AppHapticEvent.SELECTION) {
+                                            onClick = withHaptic(
+                                                if (item.screen == DemoScreen.ACTIVE_SOS) AppHapticEvent.CONFIRM else AppHapticEvent.TAP
+                                            ) {
                                                 previousScreen = selected
                                                 selected = item.screen
                                             },

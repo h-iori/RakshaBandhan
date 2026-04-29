@@ -27,14 +27,23 @@ interface AppHaptics {
 }
 
 class AndroidAppHaptics(private val view: View) : AppHaptics {
+    
+    init {
+        // Ensure haptic feedback is enabled for this view to allow performHapticFeedback to work.
+        view.isHapticFeedbackEnabled = true
+    }
+
     override fun perform(event: AppHapticEvent) {
         val constant = when (event) {
-            AppHapticEvent.TAP -> HapticFeedbackConstants.VIRTUAL_KEY
+            AppHapticEvent.TAP -> {
+                // VIRTUAL_KEY is more reliable for UI buttons than KEYBOARD_TAP
+                HapticFeedbackConstants.VIRTUAL_KEY
+            }
             AppHapticEvent.SELECTION -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                     HapticFeedbackConstants.TEXT_HANDLE_MOVE
                 } else {
-                    HapticFeedbackConstants.KEYBOARD_TAP
+                    HapticFeedbackConstants.CLOCK_TICK
                 }
             }
             AppHapticEvent.CONFIRM -> {
@@ -52,15 +61,18 @@ class AndroidAppHaptics(private val view: View) : AppHaptics {
                 }
             }
             AppHapticEvent.HEAVY_CLICK -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                    HapticFeedbackConstants.VIRTUAL_KEY
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    HapticFeedbackConstants.CONTEXT_CLICK
                 } else {
                     HapticFeedbackConstants.LONG_PRESS
                 }
             }
             AppHapticEvent.LONG_PRESS -> HapticFeedbackConstants.LONG_PRESS
         }
-        view.performHapticFeedback(constant)
+        
+        // Use FLAG_IGNORE_VIEW_SETTING to ensure feedback is performed even if the view 
+        // internal haptic feedback enabled flag is somehow reset.
+        view.performHapticFeedback(constant, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING)
     }
 }
 
