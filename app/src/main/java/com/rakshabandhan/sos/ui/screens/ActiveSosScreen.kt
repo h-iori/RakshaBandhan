@@ -75,7 +75,10 @@ fun ActiveSosScreen(onStop: () -> Unit, onExtend: () -> Unit) {
     // Staggered entrance
     val visible = remember { Array(7) { mutableStateOf(false) } }
     LaunchedEffect(Unit) {
-        visible.forEachIndexed { i, s -> delay(i * 80L); s.value = true }
+        visible.forEachIndexed { i, s -> 
+            if (i > 0) delay(80L)
+            s.value = true 
+        }
     }
 
     @Composable

@@ -49,7 +49,7 @@ fun HomeScreen(onGoToSos: () -> Unit) {
     val visible = remember { Array(6) { mutableStateOf(false) } }
     LaunchedEffect(Unit) {
         visible.forEachIndexed { i, state ->
-            delay(i * 90L)
+            if (i > 0) delay(90L)
             state.value = true
         }
     }

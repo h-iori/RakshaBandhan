@@ -74,6 +74,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
@@ -190,7 +191,7 @@ fun StatusChip(text: String, state: SosState, modifier: Modifier = Modifier) {
         ) {
             Icon(
                 Icons.Filled.FiberManualRecord, null, tint = color,
-                modifier = Modifier.size(10.dp).alpha(if (state == SosState.ACTIVE) dotAlpha else 1f)
+                modifier = Modifier.size(10.dp).graphicsLayer { alpha = if (state == SosState.ACTIVE) dotAlpha else 1f }
             )
             Spacer(Modifier.width(8.dp))
             Text(text, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
@@ -245,7 +246,10 @@ fun PrimarySosButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth(0.88f)
                 .height(64.dp)
-                .scale(breathe)
+                .graphicsLayer {
+                    scaleX = breathe
+                    scaleY = breathe
+                }
                 .shadow(
                     24.dp, MaterialTheme.shapes.large, clip = false,
                     ambientColor = Coral500.copy(alpha = 0.5f),
@@ -664,7 +668,10 @@ fun PulsingHighlight(modifier: Modifier = Modifier) {
         animationSpec = infiniteRepeatable(tween(700, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "ws"
     )
-    Icon(Icons.Filled.WarningAmber, null, tint = Coral500, modifier = modifier.size(28.dp).scale(scale))
+    Icon(Icons.Filled.WarningAmber, null, tint = Coral500, modifier = modifier.size(28.dp).graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+    })
 }
 
 // ── DemoScreenTabs ────────────────────────────────────────────────────────────
