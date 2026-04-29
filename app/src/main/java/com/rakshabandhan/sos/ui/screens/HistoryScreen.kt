@@ -21,13 +21,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Route
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.rakshabandhan.sos.model.SosIncident
+import com.rakshabandhan.sos.ui.components.DemoFrame
 import com.rakshabandhan.sos.ui.components.HeroMetric
 import com.rakshabandhan.sos.ui.components.LinearMetricRow
 import com.rakshabandhan.sos.ui.components.MapFooterStat
@@ -296,54 +296,22 @@ private fun HistoryDetailMode(
     val startedAt = exactDateTime(incident.startedAt)
     val endedAt = endDateTime(incident)
 
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, Sky500.copy(alpha = 0.28f))
+    DemoFrame(
+        title = detailHeaderTitle(incident),
+        subtitle = "Past incident record",
+        trailing = {
+            IconButton(onClick = withHaptic(AppHapticEvent.TAP, onBack)) {
+                Icon(
+                    Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
-            // ── Back header ──────────────────────────────────────────────────
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    FilledTonalIconButton(
-                        onClick = withHaptic(AppHapticEvent.TAP, onBack),
-                        colors = IconButtonDefaults.filledTonalIconButtonColors(
-                            containerColor = Sky500.copy(alpha = 0.14f),
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        )
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to history list"
-                        )
-                    }
-                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(
-                            text = detailHeaderTitle(incident),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "Past incident record",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
 
             // ── Title + full address ─────────────────────────────────────────
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
