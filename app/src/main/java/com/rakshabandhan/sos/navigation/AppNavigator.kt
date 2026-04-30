@@ -23,7 +23,7 @@ import androidx.compose.foundation.clickable
 import com.rakshabandhan.sos.ui.haptics.AppHapticEvent
 import com.rakshabandhan.sos.ui.haptics.withHaptic
 import com.rakshabandhan.sos.ui.haptics.hapticClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +35,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -124,6 +124,7 @@ import com.rakshabandhan.sos.ui.theme.Amber500
 import com.rakshabandhan.sos.ui.theme.Coral500
 import com.rakshabandhan.sos.ui.theme.Mint500
 import com.rakshabandhan.sos.ui.theme.Navy900
+import com.rakshabandhan.sos.ui.theme.Navy800
 import com.rakshabandhan.sos.ui.theme.Navy950
 import com.rakshabandhan.sos.ui.theme.Sky500
 import com.rakshabandhan.sos.ui.theme.Slate100
@@ -463,6 +464,9 @@ fun ModernDrawerContent(
     onNavigate: (DemoScreen) -> Unit,
     onLogout: () -> Unit
 ) {
+    val themeMode = LocalThemeMode.current
+    val isDark = themeMode.isDarkTheme
+
     val drawerItems = remember {
         listOf(
             DrawerItem(DemoScreen.PROFILE_SETTINGS, "Profile Settings", Icons.Filled.Person, Sky500, "Account"),
@@ -473,88 +477,133 @@ fun ModernDrawerContent(
     }
     val sections = remember(drawerItems) { drawerItems.map { it.section }.distinct() }
 
-    // Enterprise Theme Surface
     Surface(
         modifier = Modifier
-            .width(320.dp) // Slightly wider for enterprise data
+            .width(310.dp)
             .fillMaxHeight(),
-        color = MaterialTheme.colorScheme.background // Solid, clean background
+        color = MaterialTheme.colorScheme.background,
+        shadowElevation = 16.dp
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // ── Top App Brand Anchor ──────────────────────────────────────────
-            Row(
+            // ── Brand Header with subtle gradient accent ─────────────────────
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding()
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .background(Coral500.copy(alpha = 0.15f), RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Filled.Shield,
-                        contentDescription = null,
-                        tint = Coral500,
-                        modifier = Modifier.size(18.dp)
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                Coral500.copy(alpha = if (isDark) 0.08f else 0.05f),
+                                Color.Transparent
+                            )
+                        )
                     )
+                    .statusBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 18.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .background(
+                                    Brush.linearGradient(listOf(Coral500.copy(alpha = 0.2f), Coral500.copy(alpha = 0.08f))),
+                                    RoundedCornerShape(10.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Filled.Shield,
+                                contentDescription = null,
+                                tint = Coral500,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Column {
+                            Text(
+                                "RakshaBandhan",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.3.sp
+                            )
+                            Text(
+                                "SOS Platform",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+
                 }
-                Text(
-                    "RakshaBandhan SOS",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.5.sp
-                )
             }
 
-            // Divider
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+                thickness = 0.5.dp
+            )
 
-            // ── Profile Section ───────────────────────────────────────────────
+            // ── Profile Card ─────────────────────────────────────────────────
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 24.dp),
+                    .padding(horizontal = 20.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                // Clean Avatar
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .background(Navy900, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "PS",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Sky500, // Subdued accent instead of bright gradient
-                        fontWeight = FontWeight.Bold
+                // Avatar with gradient ring
+                Box(contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier
+                            .size(52.dp)
+                            .background(
+                                Brush.linearGradient(listOf(Sky500.copy(alpha = 0.3f), Coral500.copy(alpha = 0.2f))),
+                                CircleShape
+                            )
                     )
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                if (isDark) Navy900 else MaterialTheme.colorScheme.surfaceVariant,
+                                CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "PS",
+                            style = MaterialTheme.typography.titleSmall,
+                            color = if (isDark) Sky500 else Sky500,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "Priya Sharma",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         "priya.sharma@example.com",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1
                     )
                     Spacer(Modifier.height(4.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         Box(
                             Modifier
@@ -565,19 +614,23 @@ fun ModernDrawerContent(
                             "Active Session",
                             style = MaterialTheme.typography.labelSmall,
                             color = Mint500,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp
                         )
                     }
                 }
             }
 
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+                thickness = 0.5.dp
+            )
 
-            // ── Menu Navigation ───────────────────────────────────────────────
+            // ── Menu Navigation ──────────────────────────────────────────────
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(top = 8.dp)
+                    .padding(top = 4.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 sections.forEach { section ->
@@ -586,12 +639,13 @@ fun ModernDrawerContent(
                     Text(
                         text = section.uppercase(),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                         fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.2.sp,
+                        letterSpacing = 1.4.sp,
+                        fontSize = 10.sp,
                         modifier = Modifier.padding(
                             start = 24.dp, end = 24.dp,
-                            top = 24.dp, bottom = 8.dp
+                            top = 20.dp, bottom = 6.dp
                         )
                     )
 
@@ -603,50 +657,58 @@ fun ModernDrawerContent(
                         )
                     }
                 }
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(16.dp))
             }
 
-            // ── Bottom: Actions & Version ─────────────────────────────────────
-            ThemeToggleRow()
-            
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            // ── Neon Theme Toggle Pill ────────────────────────────────────────
+            NeonThemeTogglePill(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+            )
+
+            // ── Bottom: Logout + Version (pinned) ────────────────────────────
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+                thickness = 0.5.dp
+            )
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 12.dp)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
-                // Clean text-based logout
+                // Red Logout Button
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFDC2626).copy(alpha = if (isDark) 0.12f else 0.08f))
                         .hapticClickable(hapticEvent = AppHapticEvent.TAP) { onLogout() }
-                        .padding(horizontal = 12.dp, vertical = 16.dp),
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                     Icon(
                         Icons.Filled.Logout,
                         contentDescription = "Log Out",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
+                        tint = Color(0xFFDC2626),
+                        modifier = Modifier.size(22.dp)
                     )
                     Text(
                         "Log Out",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.Medium
+                        color = Color(0xFFDC2626),
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
 
                 Text(
                     "Version 1.1.0 (Build 24)",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                    fontSize = 10.sp,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(top = 8.dp, bottom = 12.dp)
+                        .padding(top = 10.dp, bottom = 8.dp)
                 )
 
                 Spacer(Modifier.navigationBarsPadding())
@@ -663,15 +725,14 @@ private fun ModernDrawerItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    // Enterprise state transitions are fast and purposeful
     val bgColor by animateColorAsState(
-        targetValue = if (isSelected) item.accentColor.copy(alpha = 0.12f) else Color.Transparent,
-        animationSpec = tween(150),
+        targetValue = if (isSelected) item.accentColor.copy(alpha = 0.10f) else Color.Transparent,
+        animationSpec = tween(180),
         label = "bgColor"
     )
     val contentColor by animateColorAsState(
         targetValue = if (isSelected) item.accentColor else MaterialTheme.colorScheme.onSurfaceVariant,
-        animationSpec = tween(150),
+        animationSpec = tween(180),
         label = "contentColor"
     )
 
@@ -679,25 +740,36 @@ private fun ModernDrawerItem(
         modifier = Modifier
             .padding(horizontal = 12.dp, vertical = 2.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)) // Sharper corners for enterprise feel
+            .clip(RoundedCornerShape(12.dp))
             .background(bgColor)
             .hapticClickable(hapticEvent = AppHapticEvent.TAP, onClick = onClick)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 13.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(24.dp)
-            )
+            // Icon container
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(
+                        if (isSelected) item.accentColor.copy(alpha = 0.12f) else Color.Transparent,
+                        RoundedCornerShape(10.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
 
             Text(
                 text = item.label,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = if (isSelected) MaterialTheme.colorScheme.onBackground else contentColor,
                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
                 modifier = Modifier.weight(1f)
@@ -708,7 +780,7 @@ private fun ModernDrawerItem(
                     Icons.Filled.ChevronRight,
                     contentDescription = null,
                     tint = item.accentColor.copy(alpha = 0.5f),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }
@@ -718,8 +790,8 @@ private fun ModernDrawerItem(
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .width(4.dp)
-                    .height(24.dp)
+                    .width(3.dp)
+                    .height(22.dp)
                     .clip(RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp))
                     .background(item.accentColor)
             )
@@ -727,63 +799,137 @@ private fun ModernDrawerItem(
     }
 }
 
+// ── Neon Theme Toggle Pill (reference-style capsule button) ───────────────────
+
 @Composable
-private fun ThemeToggleRow() {
+private fun NeonThemeTogglePill(modifier: Modifier = Modifier) {
     val themeMode = LocalThemeMode.current
     val isDark = themeMode.isDarkTheme
 
-    val thumbOffset by animateDpAsState(targetValue = if (isDark) 40.dp else 4.dp, animationSpec = spring(dampingRatio = 0.65f, stiffness = 400f), label = "thumbOffset")
-    val trackColor by animateColorAsState(targetValue = if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0), label = "trackColor")
-    val thumbColor by animateColorAsState(targetValue = if (isDark) Color(0xFF334155) else Color.White, label = "thumbColor")
-    val iconColor by animateColorAsState(targetValue = if (isDark) Color(0xFFFBBF24) else Color(0xFFF59E0B), label = "iconColor")
+    // Animated properties
+    val pillGradientStart by animateColorAsState(
+        targetValue = if (isDark) Navy950 else Color(0xFFF8FAFC),
+        animationSpec = tween(400),
+        label = "pillGradStart"
+    )
+    val pillGradientEnd by animateColorAsState(
+        targetValue = if (isDark) Navy800 else Color(0xFFE2E8F0),
+        animationSpec = tween(400),
+        label = "pillGradEnd"
+    )
+    val orbBg by animateColorAsState(
+        targetValue = if (isDark) Coral500.copy(alpha = 0.15f) else Color(0xFFFEF3C7),
+        animationSpec = tween(350),
+        label = "orbBg"
+    )
+    val orbBorder by animateColorAsState(
+        targetValue = if (isDark) Coral500.copy(alpha = 0.35f) else Amber500.copy(alpha = 0.4f),
+        animationSpec = tween(350),
+        label = "orbBorder"
+    )
+    val textColor by animateColorAsState(
+        targetValue = if (isDark) Slate200 else Color(0xFF334155),
+        animationSpec = tween(300),
+        label = "pillText"
+    )
+    val iconColor by animateColorAsState(
+        targetValue = if (isDark) Color(0xFFFBBF24) else Color(0xFFF59E0B),
+        animationSpec = tween(300),
+        label = "pillIcon"
+    )
+    // Glow accent behind the orb
+    val glowColor by animateColorAsState(
+        targetValue = if (isDark) Coral500.copy(alpha = 0.12f) else Amber500.copy(alpha = 0.10f),
+        animationSpec = tween(350),
+        label = "glow"
+    )
 
-    Row(
-        modifier = Modifier
+    Box(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.Transparent)
-            .hapticClickable(hapticEvent = AppHapticEvent.SELECTION) { themeMode.toggleTheme() }
-            .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .height(56.dp)
+            .clip(RoundedCornerShape(28.dp))
+            .background(
+                Brush.horizontalGradient(listOf(pillGradientStart, pillGradientEnd))
+            )
+            .hapticClickable(hapticEvent = AppHapticEvent.SELECTION) { themeMode.toggleTheme() },
+        contentAlignment = Alignment.CenterStart
     ) {
-        Text(
-            "Appearance",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Medium
-        )
-        
-        // Premium Pill Switch
+        // Subtle inner border
         Box(
             modifier = Modifier
-                .width(76.dp)
-                .height(40.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(trackColor)
+                .matchParentSize()
+                .clip(RoundedCornerShape(28.dp))
+                .background(Color.Transparent)
+                .then(
+                    Modifier.padding(0.5.dp)
+                )
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 20.dp, end = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            // Text label
+            AnimatedContent(
+                targetState = isDark,
+                transitionSpec = {
+                    (fadeIn(tween(300)) + slideInHorizontally { -it / 3 }) togetherWith
+                            (fadeOut(tween(200)) + slideOutHorizontally { it / 3 })
+                },
+                label = "modeLabel"
+            ) { dark ->
+                Text(
+                    text = if (dark) "DARK MODE" else "LIGHT MODE",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = textColor,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 2.sp
+                )
+            }
+
+            // Large circular orb with icon
             Box(
                 modifier = Modifier
-                    .offset(x = thumbOffset, y = 4.dp)
-                    .size(32.dp)
-                    .shadow(elevation = if (isDark) 0.dp else 4.dp, shape = CircleShape)
+                    .size(44.dp)
+                    .background(glowColor, CircleShape) // subtle glow ring
+                    .padding(2.dp)
                     .clip(CircleShape)
-                    .background(thumbColor),
+                    .background(orbBg)
+                    .then(
+                        Modifier
+                            .clip(CircleShape)
+                            .background(
+                                Brush.radialGradient(
+                                    listOf(
+                                        orbBg,
+                                        orbBg.copy(alpha = 0.6f)
+                                    )
+                                )
+                            )
+                    ),
                 contentAlignment = Alignment.Center
             ) {
-                androidx.compose.animation.AnimatedContent(
+                AnimatedContent(
                     targetState = isDark,
                     transitionSpec = {
-                        (fadeIn(tween(300)) + scaleIn(initialScale = 0.5f)) togetherWith (fadeOut(tween(300)) + scaleOut(targetScale = 0.5f))
+                        (fadeIn(tween(300)) + scaleIn(
+                            initialScale = 0.3f,
+                            animationSpec = spring(dampingRatio = 0.5f, stiffness = 400f)
+                        )) togetherWith
+                                (fadeOut(tween(180)) + scaleOut(targetScale = 0.3f))
                     },
-                    label = "iconTransition"
+                    label = "orbIcon"
                 ) { dark ->
-                    if (dark) {
-                        Icon(Icons.Filled.Nightlight, null, tint = iconColor, modifier = Modifier.size(18.dp))
-                    } else {
-                        Icon(Icons.Filled.WbSunny, null, tint = iconColor, modifier = Modifier.size(18.dp))
-                    }
+                    Icon(
+                        imageVector = if (dark) Icons.Filled.Nightlight else Icons.Filled.WbSunny,
+                        contentDescription = if (dark) "Switch to light mode" else "Switch to dark mode",
+                        tint = iconColor,
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
             }
         }

@@ -169,7 +169,7 @@ private fun AlertListCard(
                 }
                 AlertStatePill(
                     text = "Live",
-                    tint = accentColor
+                    tint = Coral500
                 )
             }
 
